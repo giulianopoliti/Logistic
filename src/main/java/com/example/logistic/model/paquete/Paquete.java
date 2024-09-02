@@ -4,8 +4,12 @@ import com.example.logistic.model.ruta.Ubicacion;
 import com.example.logistic.model.roles.Cliente;
 import com.example.logistic.model.roles.Driver;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
+@Getter
+@Setter
 @Entity
 public class Paquete {
     @Id
@@ -23,19 +27,19 @@ public class Paquete {
     private TipoPaquete tipoPaquete;
 
     @Embedded
-    private Ubicacion ubicacion;
-
-    public Paquete(String contenido, Cliente cliente, TipoPaquete tipoPaquete, Ubicacion ubicacion) {
-        this.contenido = contenido;
-        this.cliente = cliente;
-        this.date = new Date();
-        this.estadoPaquete = EstadoPaquete.EnLoDelCliente;
-        this.tipoPaquete = tipoPaquete;
-        this.ubicacion = ubicacion;
-    }
+    private Ubicacion ubicacionEntrega;
+    @Embedded
+    private Ubicacion ubicacionActual;
 
     public Paquete() {
 
+    }
+    public Paquete(String contenido, Cliente cliente, TipoPaquete tipoPaquete, Ubicacion ubicacionEntrega) {
+        this.contenido = contenido;
+        this.cliente = cliente;
+        this.ubicacionActual = this.cliente.getLocales().getFirst().getUbicacion(); // modificar
+        this.tipoPaquete = tipoPaquete;
+        this.ubicacionEntrega = ubicacionEntrega;
     }
 
     public void llegarADeposito() {
@@ -46,6 +50,7 @@ public class Paquete {
     }
     public void entregarPaquete() {
         this.estadoPaquete = EstadoPaquete.Entregado;
+        this.ubicacionActual = ubicacionEntrega;
         // logica para guardar paquete en db
     }
 

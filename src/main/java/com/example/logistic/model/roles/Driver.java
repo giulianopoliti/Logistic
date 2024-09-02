@@ -1,12 +1,18 @@
 package com.example.logistic.model.roles;
 
+import com.example.logistic.model.paquete.Paquete;
 import com.example.logistic.model.ruta.Ruta;
+import com.example.logistic.model.ruta.Viaje;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 @Entity
+@Setter
+@Getter
 public class Driver extends Persona {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,8 +20,9 @@ public class Driver extends Persona {
     @OneToOne
     @JoinColumn(name = "id_vehiculo")
     private Vehiculo vehiculo;
-    @OneToMany(mappedBy = "driver")
-    private List<Ruta> rutas = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "ruta_diaria")
+    private Ruta rutaDiaria;
 
     public Driver(
                   String name,
@@ -30,5 +37,17 @@ public class Driver extends Persona {
 
     public Driver() {
 
+    }
+    public void crearRuta (List<Viaje> viajes) {
+        Ruta ruta = new Ruta();
+        ruta.setDriver(this);
+        ruta.setViajes(viajes);
+        this.setRutaDiaria(ruta);
+    }
+    public void asignarPaquete(Paquete paquete) {
+        if (this.rutaDiaria == null) {
+            rutaDiaria = new Ruta();
+        }
+        rutaDiaria.addViaje(this, paquete);
     }
 }

@@ -7,16 +7,16 @@ import jakarta.persistence.Id;
 
 import java.util.Date;
 @Entity
-public class Administrator extends Persona {
+public class Admin extends Persona {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    public Administrator(String name, String lastName, Date dateOfBirth, Tenant tenant, String email) {
+    public Admin(String name, String lastName, Date dateOfBirth, Tenant tenant, String email) {
         super(name, lastName, dateOfBirth, tenant, email);
     }
 
-    public Administrator() {
+    public Admin() {
 
     }
 
