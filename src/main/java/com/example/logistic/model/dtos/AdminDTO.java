@@ -1,8 +1,12 @@
 package com.example.logistic.model.dtos;
 
-public class AdminDTO {
-    private Integer id;
-    private String name;
-    private String lastName;
-    private String username;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class AdminDTO extends PersonaDTO{
+    public AdminDTO(Integer id, String name, String lastName, String username, Integer tenantId) {
+        super(id, name, lastName, username, tenantId);
+    }
 }

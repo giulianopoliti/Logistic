@@ -1,5 +1,6 @@
 package com.example.logistic.service;
 
+import com.example.logistic.model.roles.Admin;
 import com.example.logistic.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,5 +13,7 @@ public class AdminService{
     public AdminService(AdminRepository adminRepository) {
         this.adminRepository = adminRepository;
     }
-
+    public void save (Admin admin) {
+        adminRepository.save(admin);
+    }
 }

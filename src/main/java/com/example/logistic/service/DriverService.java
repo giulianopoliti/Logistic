@@ -27,5 +27,8 @@ public class DriverService {
         Driver driver = getDriverById(driverId);
         return driver.getRutaDiaria();
     }
+    public void save (Driver driver) {
+        driverRepository.save(driver);
+    }
 
 }

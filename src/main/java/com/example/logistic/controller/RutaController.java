@@ -12,6 +12,8 @@ import com.example.logistic.model.paquete.Paquete;
 import com.example.logistic.model.roles.Driver;
 import com.example.logistic.model.ruta.Ruta;
 import com.example.logistic.model.ruta.Viaje;
+import com.example.logistic.service.DriverService;
+import com.example.logistic.service.PaqueteService;
 import com.example.logistic.service.RutaService;
 import com.example.logistic.service.ViajeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/rutas")
@@ -38,7 +41,10 @@ public class RutaController {
     private DriverMapper driverMapper;
     @Autowired
     private RutaMapper rutaMapper;
-
+    @Autowired
+    private PaqueteService paqueteService;
+    @Autowired
+    private DriverService driverService;
 
     @GetMapping("/{id}")
     public ResponseEntity<Ruta> getRuta(@PathVariable Integer id) {
@@ -49,11 +55,13 @@ public class RutaController {
     @PostMapping
     public ResponseEntity<RutaDTO> crearRuta(@RequestParam List<PaqueteDTO> paquetesDTO,
                                           DriverDTO driverDTO) {
-        List<Paquete> paquetes = new ArrayList<>();
-        Driver driver = driverMapper.toEntity(driverDTO);
+        List<Paquete> paquetes = paquetesDTO.stream()
+                .map(paqueteDTO -> paqueteService.getPaqueteById(paqueteDTO.getId()))
+                .collect(Collectors.toList());
+        Driver driver = driverService.getDriverById(driverDTO.getId());
         Ruta ruta = new Ruta(driver, paquetes);
         rutaService.save(ruta);
-        return ResponseEntity.ok(rutaMapper.toDTO(ruta));
+        return ResponseEntity.ok(rutaMapper.toDTO(ruta)); // REVEER COMO MAPEA DE RUTA A RUTADTO
     }
 
     @PutMapping("/{id}/viajes")

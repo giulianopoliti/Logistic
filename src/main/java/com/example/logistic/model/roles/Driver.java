@@ -24,11 +24,8 @@ public class Driver extends Persona {
     @JoinColumn(name = "ruta_diaria")
     private Ruta rutaDiaria;
 
-    public Driver(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String username, String password, Role role, Integer id, Vehiculo vehiculo, Ruta rutaDiaria) {
+    public Driver(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String username, String password, Role role) {
         super(name, lastName, dateOfBirth, tenant, email, username, password, role);
-        this.id = id;
-        this.vehiculo = vehiculo;
-        this.rutaDiaria = rutaDiaria;
     }
 
     public Driver(
@@ -44,6 +41,9 @@ public class Driver extends Persona {
 
     public Driver() {
 
+    }
+    public void modificarVehiculo (Vehiculo vehiculo) {
+        this.vehiculo = vehiculo;
     }
     public void crearRuta (List<Viaje> viajes) {
         Ruta ruta = new Ruta();

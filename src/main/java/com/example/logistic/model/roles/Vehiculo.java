@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 public class Vehiculo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private Long id;
+    private Integer id;
 
     private TipoVehiculo tipoVehiculo;
     private String patente;

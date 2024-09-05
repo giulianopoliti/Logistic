@@ -7,11 +7,11 @@ import lombok.Setter;
 import java.util.List;
 @Getter
 @Setter
-public class ClienteDTO {
-    private Integer id;
-    private String nombre;
-    private String apellido;
-    private String username;
+public class ClienteDTO extends PersonaDTO{
+    public ClienteDTO(Integer id, String nombre, String apellido, String username, Integer tenantId) {
+        super(id, nombre, apellido, username, tenantId);
+    }
+
 
     // Constructores, getters y setters
 }

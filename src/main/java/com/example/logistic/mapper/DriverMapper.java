@@ -8,7 +8,9 @@ import org.mapstruct.Mapping;
 @Mapper (componentModel = "spring")
 public interface DriverMapper {
     @Mapping(source = "vehiculo.id", target = "vehiculoId")
+    @Mapping(source = "tenant.id", target = "tenantId")
     DriverDTO toDTO (Driver driver);
     @Mapping(source = "vehiculoId", target = "vehiculo.id")
+    @Mapping(source = "tenantId", target = "tenant.id")
     Driver toEntity(DriverDTO driverDTO);
 }

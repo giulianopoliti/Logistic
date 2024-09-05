@@ -6,11 +6,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DriverDTO {
-    private Integer id;
-    private String name;
-    private String lastName;
-    private String username;
+public class DriverDTO extends PersonaDTO{
     private Integer vehiculoId;
+
+    public DriverDTO(Integer id, String nombre, String apellido, String username, Integer tenantId, Integer vehiculoId) {
+        super(id, nombre, apellido, username, tenantId);
+        this.vehiculoId = vehiculoId;
+    }
+
     // Constructores, getters y setters
 }
