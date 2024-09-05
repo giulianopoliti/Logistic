@@ -24,6 +24,13 @@ public class Driver extends Persona {
     @JoinColumn(name = "ruta_diaria")
     private Ruta rutaDiaria;
 
+    public Driver(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String username, String password, Role role, Integer id, Vehiculo vehiculo, Ruta rutaDiaria) {
+        super(name, lastName, dateOfBirth, tenant, email, username, password, role);
+        this.id = id;
+        this.vehiculo = vehiculo;
+        this.rutaDiaria = rutaDiaria;
+    }
+
     public Driver(
                   String name,
                   String lastName,
@@ -31,7 +38,7 @@ public class Driver extends Persona {
                   Tenant tenant,
                   String email,
                   Vehiculo vehiculo) {
-        super(name, lastName, dateOfBirth, tenant, email);
+
         this.vehiculo = vehiculo;
     }
 

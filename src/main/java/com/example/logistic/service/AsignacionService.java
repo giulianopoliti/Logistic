@@ -33,11 +33,9 @@ public class AsignacionService {
     }
 
     @Transactional
-    public void asignarPaqueteADriver(Integer paqueteId, Integer driverId) {
-        DriverDTO driverDTO = driverService.getDriverById(driverId);
-        PaqueteDTO paqueteDTO = paqueteService.getPaqueteById(paqueteId);
-        Driver driver = driverMapper.toEntity(driverDTO);
-        Paquete paquete = paqueteMapper.toEntity(paqueteDTO);
+    public void asignarPaqueteADriver(PaqueteDTO paqueteDTO, DriverDTO driverDTO) {
+        Driver driver = driverService.getDriverById(driverMapper.toEntity(driverDTO).getId());
+        Paquete paquete = paqueteService.getPaqueteById(paqueteMapper.toEntity(paqueteDTO).getId());
         driver.asignarPaquete(paquete);
     }
 }

@@ -7,6 +7,7 @@ import com.example.logistic.repository.RutaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -26,6 +27,9 @@ public class RutaService {
         Ruta ruta = getRutaById(rutaId);
         ruta.setViajes(viajes);
         return rutaRepository.save(ruta);
+    }
+    public Ruta findByDriverId(Integer driverId) {
+        return rutaRepository.findByDriverId(driverId, new Date()); // esto te trae la primera ruta que encuentra del driver
     }
 
 }

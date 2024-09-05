@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 @Entity
 @Getter
@@ -24,14 +25,17 @@ public class Ruta {
     @ManyToOne
     @JoinColumn(name = "id_driver")
     private Driver driver;
+    private boolean completada;
+    @Temporal(TemporalType.DATE)
+    private Date date;
 
     public Ruta() {
 
     }
     public Ruta (Driver driver, List<Paquete> paquetes) {
-
         for (int i = 0; i < paquetes.size(); i++) {
             Viaje viaje = new Viaje(driver, paquetes.get(i));
+            viaje.setDriver(driver);
             if (this.viajes.size() == 0) {
                 viaje.setUbicacionOrigen(UbicacionDeposito.getInstance());
             } else {
@@ -39,7 +43,6 @@ public class Ruta {
             }
             viaje.setOrden(this.viajes.size()-1);
             this.viajes.add(viaje);
-            this.viajes.get(i).setDriver(driver);
         }
         this.driver = driver;
     }
@@ -56,4 +59,11 @@ public class Ruta {
 
     }
 
+    public boolean isCompletada() {
+        for (int i = 0; i < viajes.size(); i++) {
+            if (!viajes.get(i).isCompletado()) {
+                return false;
+            }
+        } return true;
+    }
 }

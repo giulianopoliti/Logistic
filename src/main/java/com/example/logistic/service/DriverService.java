@@ -16,13 +16,11 @@ public class DriverService {
     @Autowired
     private DriverRepository driverRepository;
     @Autowired
-    private PaqueteRepository paqueteRepository;
-    @Autowired
     private DriverMapper driverMapper;
 
-    public DriverDTO getDriverById(Integer id) {
+    public Driver getDriverById(Integer id) {
         Driver driver = driverRepository.findById(id).orElseThrow(() -> new RuntimeException("Driver no encontrado"));
-        driverMapper.toDTO(driver);
+        return driver;
     }
 
     public Ruta getRutaDiaria(Integer driverId) {
@@ -30,10 +28,4 @@ public class DriverService {
         return driver.getRutaDiaria();
     }
 
-    public void marcarPaqueteEntregado(Integer driverId, Integer paqueteId) {
-        Paquete paquete = paqueteRepository.findById(paqueteId)
-                .orElseThrow(() -> new RuntimeException("Paquete no encontrado"));
-        paquete.setEstadoPaquete(EstadoPaquete.Entregado);
-        paqueteRepository.save(paquete);
-    }
 }

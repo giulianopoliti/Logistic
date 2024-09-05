@@ -12,9 +12,10 @@ public class Admin extends Persona {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    public Admin(String name, String lastName, Date dateOfBirth, Tenant tenant, String email) {
-        super(name, lastName, dateOfBirth, tenant, email);
+    public Admin(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String username, String password, Role role) {
+        super(name, lastName, dateOfBirth, tenant, email, username, password, role);
     }
+
 
     public Admin() {
 

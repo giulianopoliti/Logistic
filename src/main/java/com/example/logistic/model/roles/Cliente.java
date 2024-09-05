@@ -25,14 +25,16 @@ public class Cliente extends Persona {
     @OneToMany
     @JoinColumn(name = "cliente")
     private List<Paquete> paquetes = new ArrayList<>();
-    public Cliente(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, List<Local> locales) {
-        super(name, lastName, dateOfBirth, tenant, email);
-        this.locales = locales;
+
+    public Cliente(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String username, String password, Role role) {
+        super(name, lastName, dateOfBirth, tenant, email, username, password, role);
     }
 
     public Cliente() {
-
+        super();
     }
+
+
     public void addLocal(Local local) {
         this.locales.add(local);
     }
@@ -40,13 +42,6 @@ public class Cliente extends Persona {
         this.locales.remove(local);
     }
 
-    public void cargarPaqueteParticular(String contenido, Ubicacion ubicacion){
-        Paquete paquete = new Paquete(contenido, this, TipoPaquete.Particular, ubicacion);
-    }
-    public void cargarPaqueteMercadoLibre(String contenido, Ubicacion ubicacion) {
-        Paquete paquete = new Paquete(contenido, this, TipoPaquete.MercadoLibre, ubicacion);
-        this.paquetes.add(paquete);
-    }
     public void removePaquete(Paquete paquete) {
         this.paquetes.remove(paquete);
     }

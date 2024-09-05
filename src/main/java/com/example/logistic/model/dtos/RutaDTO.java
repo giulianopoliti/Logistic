@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 public class RutaDTO {
     private Integer id;
-    private Date fecha;
+    private Date date;
     private Ubicacion ubicacionDeposito;
     private Integer driverId;
     private List<ViajeDTO> viajes;

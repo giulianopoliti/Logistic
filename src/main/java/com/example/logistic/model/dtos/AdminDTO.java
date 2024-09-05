@@ -4,4 +4,5 @@ public class AdminDTO {
     private Integer id;
     private String name;
     private String lastName;
+    private String username;
 }

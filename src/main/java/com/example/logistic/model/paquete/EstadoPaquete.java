@@ -4,5 +4,6 @@ public enum EstadoPaquete {
     EnLoDelCliente,
     EnDepositoSinDriver,
     EnCamino,
-    Entregado
+    Entregado,
+    PendienteDiaAnterior
 }

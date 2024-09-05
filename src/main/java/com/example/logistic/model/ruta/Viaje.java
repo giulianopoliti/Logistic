@@ -28,7 +28,7 @@ public class Viaje {
     private boolean completado;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaCreacion;
+    private Date date;
     @JoinColumn(name="id_driver")
     @ManyToOne
     private Driver driver;
@@ -36,6 +36,8 @@ public class Viaje {
     private Ubicacion ubicacionOrigen;
     @Embedded
     private Ubicacion ubicacionDestino;
+    @Enumerated(EnumType.STRING)
+    private TipoViaje tipoViaje;
 
     public Viaje(){
 
@@ -45,6 +47,15 @@ public class Viaje {
         this.paquete = paquete;
         this.ubicacionDestino = paquete.getUbicacionEntrega();
         this.completado = false;
+    }
+    public void subirOrden (){
+        this.orden++;
+    }
+    public void bajarOrden(){
+        this.orden--;
+    }
+    public void completarViaje (){
+        this.completado = true;
     }
 
     // Getters y setters

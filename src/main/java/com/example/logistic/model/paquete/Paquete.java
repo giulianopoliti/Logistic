@@ -1,5 +1,6 @@
 package com.example.logistic.model.paquete;
 
+import com.example.logistic.model.roles.Local;
 import com.example.logistic.model.ruta.Ubicacion;
 import com.example.logistic.model.roles.Cliente;
 import com.example.logistic.model.roles.Driver;
@@ -34,10 +35,11 @@ public class Paquete {
     public Paquete() {
 
     }
-    public Paquete(String contenido, Cliente cliente, TipoPaquete tipoPaquete, Ubicacion ubicacionEntrega) {
+    public Paquete(String contenido, Cliente cliente, TipoPaquete tipoPaquete, Ubicacion ubicacionEntrega, Local local) {
         this.contenido = contenido;
         this.cliente = cliente;
-        this.ubicacionActual = this.cliente.getLocales().getFirst().getUbicacion(); // modificar
+        this.estadoPaquete = EstadoPaquete.EnLoDelCliente;
+        this.ubicacionActual = local.getUbicacion();
         this.tipoPaquete = tipoPaquete;
         this.ubicacionEntrega = ubicacionEntrega;
     }
@@ -48,10 +50,12 @@ public class Paquete {
     public void encaminarPaquete () {
         this.estadoPaquete = EstadoPaquete.EnCamino;
     }
-    public void entregarPaquete() {
+    public void marcarPaqueteEntregado() {
         this.estadoPaquete = EstadoPaquete.Entregado;
         this.ubicacionActual = ubicacionEntrega;
-        // logica para guardar paquete en db
+    }
+    public void marcarPendienteProximoDia () {
+        this.estadoPaquete = EstadoPaquete.PendienteDiaAnterior;
     }
 
 }

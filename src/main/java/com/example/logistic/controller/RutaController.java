@@ -1,16 +1,24 @@
 package com.example.logistic.controller;
 
+import com.example.logistic.mapper.DriverMapper;
+import com.example.logistic.mapper.PaqueteMapper;
+import com.example.logistic.mapper.RutaMapper;
+import com.example.logistic.mapper.ViajeMapper;
 import com.example.logistic.model.dtos.DriverDTO;
 import com.example.logistic.model.dtos.PaqueteDTO;
 import com.example.logistic.model.dtos.RutaDTO;
+import com.example.logistic.model.dtos.ViajeDTO;
 import com.example.logistic.model.paquete.Paquete;
+import com.example.logistic.model.roles.Driver;
 import com.example.logistic.model.ruta.Ruta;
 import com.example.logistic.model.ruta.Viaje;
 import com.example.logistic.service.RutaService;
+import com.example.logistic.service.ViajeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,6 +26,19 @@ import java.util.List;
 public class RutaController {
     @Autowired
     private RutaService rutaService;
+    @Autowired
+    private ViajeController viajeController;
+    @Autowired
+    private ViajeService viajeService;
+    @Autowired
+    private ViajeMapper viajeMapper;
+    @Autowired
+    private PaqueteMapper paqueteMapper;
+    @Autowired
+    private DriverMapper driverMapper;
+    @Autowired
+    private RutaMapper rutaMapper;
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Ruta> getRuta(@PathVariable Integer id) {
@@ -26,10 +47,13 @@ public class RutaController {
     }
 
     @PostMapping
-    public ResponseEntity<Ruta> crearRuta(@RequestParam List<PaqueteDTO> paquetesDTO,
+    public ResponseEntity<RutaDTO> crearRuta(@RequestParam List<PaqueteDTO> paquetesDTO,
                                           DriverDTO driverDTO) {
-        Ruta ruta = new Ruta();
-
+        List<Paquete> paquetes = new ArrayList<>();
+        Driver driver = driverMapper.toEntity(driverDTO);
+        Ruta ruta = new Ruta(driver, paquetes);
+        rutaService.save(ruta);
+        return ResponseEntity.ok(rutaMapper.toDTO(ruta));
     }
 
     @PutMapping("/{id}/viajes")
@@ -37,5 +61,18 @@ public class RutaController {
         // Implementación
         return null;
 
+    }
+
+    @PutMapping("/{id}/")
+    public ResponseEntity<Ruta> addViaje (@RequestParam DriverDTO driverDTO, PaqueteDTO paqueteDTO) {
+        Ruta ruta = rutaService.findByDriverId(driverDTO.getId());
+        ruta.addViaje(driverMapper.toEntity(driverDTO), paqueteMapper.toEntity(paqueteDTO));
+        return ResponseEntity.ok(ruta);
+    }
+    public ResponseEntity<Ruta> finalizarRuta (DriverDTO driverDTO) {
+        Ruta ruta = rutaService.findByDriverId(driverDTO.getId());
+        if (ruta.isCompletada()) {
+            return ResponseEntity.ok(ruta);
+        } else return null; // reveer esto, que rta dar
     }
 }

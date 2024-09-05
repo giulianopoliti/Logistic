@@ -1,6 +1,7 @@
 package com.example.logistic.controller;
 
 
+import com.example.logistic.mapper.DriverMapper;
 import com.example.logistic.model.dtos.DriverDTO;
 import com.example.logistic.model.roles.Driver;
 import com.example.logistic.model.ruta.Ruta;
@@ -14,18 +15,20 @@ import org.springframework.web.bind.annotation.*;
 public class DriverController {
     @Autowired
     private DriverService driverService;
+    @Autowired
+    private DriverMapper driverMapper;
 
     @GetMapping("/{id}")
-    public ResponseEntity<DriverDTO> getDriver(@PathVariable Integer id) {
-        DriverDTO driverDTO = driverService.getDriverById(id);
-        return ResponseEntity.ok(driverDTO);
+    public ResponseEntity<Driver> getDriver(@PathVariable Integer id) {
+        Driver driver = driverService.getDriverById(id);
+        DriverDTO driverDTO = driverMapper.toDTO(driver);
+        return ResponseEntity.ok(driver);
     }
 
     @GetMapping("/{id}/ruta-diaria")
-    public ResponseEntity<Ruta> getRutaDiaria(@PathVariable Integer id) {
-        // Implementación
+    public ResponseEntity<Ruta> getRutaDiaria(@PathVariable DriverDTO driverDTO) {
+        Driver driver = driverService.getDriverById(driverDTO.getId());
         return null;
-
     }
 
     @PutMapping("/{id}/paquetes/{paqueteId}/entregado")

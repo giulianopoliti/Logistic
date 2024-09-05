@@ -10,8 +10,7 @@ public class PaqueteDTO {
     private Integer id;
     private String contenido;
     private Integer clienteId;
-    private Integer driverId;
-    private Date fecha;
+    private Date date;
     private EstadoPaquete estadoPaquete;
     private TipoPaquete tipoPaquete;
     private Ubicacion ubicacionActual;
