@@ -1,6 +1,7 @@
 package com.example.logistic.model.roles;
 
 import com.example.logistic.model.paquete.Paquete;
+import com.example.logistic.model.roles.meli.IntegracionMeliDriver;
 import com.example.logistic.model.ruta.Ruta;
 import com.example.logistic.model.ruta.Viaje;
 import jakarta.persistence.*;
@@ -20,9 +21,12 @@ public class Driver extends Persona {
     @OneToOne
     @JoinColumn(name = "id_vehiculo")
     private Vehiculo vehiculo;
-    @ManyToOne
-    @JoinColumn(name = "ruta_diaria")
-    private Ruta rutaDiaria;
+    @OneToMany(mappedBy = "driver_id",fetch = FetchType.LAZY)
+    private List<Ruta> rutas;
+    @OneToMany(mappedBy = "driver_id",fetch = FetchType.LAZY)
+    private List<Viaje> viajes;
+    @Embedded
+    private IntegracionMeliDriver integracionMeliDriver;
 
     public Driver(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String username, String password, Role role) {
         super(name, lastName, dateOfBirth, tenant, email, username, password, role);
@@ -45,16 +49,14 @@ public class Driver extends Persona {
     public void modificarVehiculo (Vehiculo vehiculo) {
         this.vehiculo = vehiculo;
     }
-    public void crearRuta (List<Viaje> viajes) {
+
+    // ver que devolver aca
+    public Ruta crearRuta (List<Paquete> paquetes) {
         Ruta ruta = new Ruta();
-        ruta.setDriver(this);
-        ruta.setViajes(viajes);
-        this.setRutaDiaria(ruta);
-    }
-    public void asignarPaquete(Paquete paquete) {
-        if (this.rutaDiaria == null) {
-            rutaDiaria = new Ruta();
+        for (int i = 0; i < paquetes.size(); i++) {
+            ruta.addViaje(this, paquetes.get(i));
         }
-        rutaDiaria.addViaje(this, paquete);
+        return ruta;
     }
+
 }

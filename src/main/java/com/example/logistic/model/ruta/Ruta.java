@@ -3,7 +3,7 @@ package com.example.logistic.model.ruta;
 import com.example.logistic.model.paquete.Paquete;
 import com.example.logistic.model.paquete.TipoPaquete;
 import com.example.logistic.model.roles.Driver;
-import com.example.logistic.model.roles.UbicacionDeposito;
+import com.example.logistic.model.roles.Tenant;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +28,9 @@ public class Ruta {
     private boolean completada;
     @Temporal(TemporalType.DATE)
     private Date date;
+    @ManyToOne
+    @JoinColumn(name = "tenant_id")
+    private Tenant tenant;
 
     public Ruta() {
 
@@ -37,7 +40,6 @@ public class Ruta {
             Viaje viaje = new Viaje(driver, paquetes.get(i));
             viaje.setDriver(driver);
             if (this.viajes.size() == 0) {
-                viaje.setUbicacionOrigen(UbicacionDeposito.getInstance());
             } else {
                 viaje.setUbicacionOrigen(paquetes.get(i-1).getUbicacionEntrega());
             }

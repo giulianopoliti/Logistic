@@ -9,6 +9,7 @@ import com.example.logistic.model.roles.Cliente;
 import com.example.logistic.model.roles.Role;
 import com.example.logistic.model.roles.Tenant;
 import com.example.logistic.service.ClienteService;
+import com.example.logistic.service.PaqueteService;
 import com.example.logistic.service.TenantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/clientes")
+@RequestMapping("/clientes")
 public class ClienteController {
     @Autowired
     private ClienteService clienteService;
@@ -26,8 +27,10 @@ public class ClienteController {
     private ClienteMapper clienteMapper;
     @Autowired
     private TenantService tenantService;
+    @Autowired
+    private PaqueteService paqueteService;
 
-    @PostMapping
+    @PostMapping("/registro")
     public ResponseEntity<ClienteDTO> crearClienteConAcceso (@RequestBody Map<String, Object> clienteData) {
         Tenant tenant = tenantService.getById((Integer) clienteData.get("tenantId"));
         // aca deberiamos encriptar la contraseña
@@ -58,7 +61,7 @@ public class ClienteController {
 
     @GetMapping("/{id}/paquetes")
     public ResponseEntity<List<PaqueteDTO>> getPaquetesCliente(@PathVariable ClienteDTO clienteDTO) {
-        return null;
+        List<Paquete> paquetes = new ArrayList<>();
     }
 
 }

@@ -12,6 +12,7 @@ import com.example.logistic.model.roles.Cliente;
 import com.example.logistic.model.roles.Local;
 import com.example.logistic.model.ruta.Ubicacion;
 import com.example.logistic.service.ClienteService;
+import com.example.logistic.service.LocalService;
 import com.example.logistic.service.PaqueteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,10 +33,18 @@ public class PaqueteController {
     private ClienteMapper clienteMapper;
     @Autowired
     private ClienteService clienteService;
+    @Autowired
+    private LocalService localService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<PaqueteDTO> getPaquete(@PathVariable Integer id) {
+    public ResponseEntity<PaqueteDTO> getPaqueteDTO(@PathVariable Integer id) {
         return ResponseEntity.ok(paqueteMapper.toDTO(paqueteService.getPaqueteById(id)));
+    }
+
+    // on click en paquete, que te muestre todo
+    public ResponseEntity<Paquete> getPaquete (@RequestParam PaqueteDTO paqueteDTO) {
+        Paquete paquete = paqueteService.getPaqueteById(paqueteDTO.getId());
+        return ResponseEntity.ok(paquete);
     }
     public ResponseEntity<PaqueteDTO> cargarPaqueteParticular(String contenido,
                                                            ClienteDTO clienteDTO,
@@ -63,13 +72,8 @@ public class PaqueteController {
     }
 
     // El driver puede marcar cuando no llega a entregar un paquete
-    public ResponseEntity<PaqueteDTO> marcarPendienteProximoDia (PaqueteDTO paqueteDTO){
-        Paquete paquete = paqueteMapper.toEntity(paqueteDTO);
-        paquete.marcarPendienteProximoDia();
-        paqueteService.save(paquete);
-        return ResponseEntity.ok(paqueteMapper.toDTO(paquete));
-    }
-    public ResponseEntity<List<PaqueteDTO>> getPaquetesCliente (ClienteDTO clienteDTO) {
+
+    public ResponseEntity<List<PaqueteDTO>> getPaquetesCliente (@RequestBody ClienteDTO clienteDTO) {
         List<Paquete> paquetes = paqueteService.findPaquetesByClienteId(clienteDTO.getId());
         List<PaqueteDTO> paqueteDTOS = paquetes.stream().map(paqueteMapper::toDTO).collect(Collectors.toList());
         return ResponseEntity.ok(paqueteDTOS);
@@ -82,5 +86,45 @@ public class PaqueteController {
         // re clean esta linea
         List<PaqueteDTO> paqueteDTOS = paquetes.stream().map(paqueteMapper::toDTO).collect(Collectors.toList());
         return ResponseEntity.ok(paqueteDTOS);
+    }
+    // reveer esta func, cargar muchos paquetes de manera particular, puede ser excel y guarda en db,
+    // hay que ver que info nos mandamos desde el front
+    public ResponseEntity<List<PaqueteDTO>> cargarPaquetesParticular(@RequestBody List<PaqueteDTO> paqueteDTOS) {
+        List<Paquete> paquetes = new ArrayList<>();
+        for (int i = 0; i < paqueteDTOS.size(); i++) {
+            Cliente cliente = clienteService.findById(paqueteDTOS.get(i).getClienteId());
+            Paquete paquete = new Paquete(paqueteDTOS.get(i).getContenido(),
+                    cliente,
+                    TipoPaquete.Particular,
+                    paqueteDTOS.get(i).getUbicacionEntrega(),
+                    localService.getById(paqueteDTOS.get(i).getLocalId()));
+            paquetes.add(paquete);
+            paqueteService.save(paquete);
+        }
+        return ResponseEntity.ok(paqueteDTOS);
+    }
+
+    public ResponseEntity<List<PaqueteDTO>> cargarPaquetesMELI(@RequestBody List<PaqueteDTO> paqueteDTOS) {
+        List<Paquete> paquetes = new ArrayList<>();
+        for (int i = 0; i < paqueteDTOS.size(); i++) {
+            Cliente cliente = clienteService.findById(paqueteDTOS.get(i).getClienteId());
+            Paquete paquete = new Paquete(paqueteDTOS.get(i).getContenido(),
+                    cliente,
+                    TipoPaquete.MercadoLibre,
+                    paqueteDTOS.get(i).getUbicacionEntrega(),
+                    localService.getById(paqueteDTOS.get(i).getLocalId()));
+            paquetes.add(paquete);
+            paqueteService.save(paquete);
+        }
+        return ResponseEntity.ok(paqueteDTOS);
+    }
+    // cuando el driver escanea el qr de flex, cambia el estado a que lo tiene el driver,
+    // ya esta en el sistema
+    public ResponseEntity<PaqueteDTO> marcarPaqueteDespachado (PaqueteDTO paqueteDTO) {
+        Paquete paquete = paqueteService.getPaqueteById(paqueteDTO.getId());
+        paquete.setEstadoPaquete(EstadoPaquete.Despachado);
+        paqueteService.save(paquete);
+        // ver si crear viaje aca o no
+        return ResponseEntity.ok(paqueteMapper.toDTO(paquete));
     }
 }

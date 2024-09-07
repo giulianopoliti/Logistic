@@ -14,6 +14,9 @@ public class AdminService{
         this.adminRepository = adminRepository;
     }
     public void save (Admin admin) {
+        if (admin == null) {
+            throw new RuntimeException("Error al guardar el admin");
+        }
         adminRepository.save(admin);
     }
 }

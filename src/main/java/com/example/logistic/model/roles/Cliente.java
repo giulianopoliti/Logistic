@@ -1,5 +1,7 @@
 package com.example.logistic.model.roles;
 
+import com.example.logistic.model.roles.meli.IntegracionMeliCliente;
+import com.example.logistic.model.roles.meli.IntegracionMeliDriver;
 import com.example.logistic.model.ruta.Ubicacion;
 import com.example.logistic.model.paquete.Paquete;
 import com.example.logistic.model.paquete.TipoPaquete;
@@ -19,12 +21,14 @@ public class Cliente extends Persona {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente")
     private List<Local> locales = new ArrayList<>();
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente")
     private List<Paquete> paquetes = new ArrayList<>();
+    @Embedded
+    private IntegracionMeliDriver integracionMeliCliente;
 
     public Cliente(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String username, String password, Role role) {
         super(name, lastName, dateOfBirth, tenant, email, username, password, role);

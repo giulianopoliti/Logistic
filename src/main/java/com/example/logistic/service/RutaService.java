@@ -31,5 +31,8 @@ public class RutaService {
     public Ruta findByDriverId(Integer driverId) {
         return rutaRepository.findByDriverId(driverId, new Date()); // esto te trae la primera ruta que encuentra del driver
     }
+    public List<Ruta> findByDay (Date date, Integer tenantId) {
+        return rutaRepository.findByDay(date, tenantId);
+    }
 
 }

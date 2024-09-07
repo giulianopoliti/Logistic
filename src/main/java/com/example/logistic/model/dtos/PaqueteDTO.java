@@ -18,6 +18,7 @@ public class PaqueteDTO {
     private TipoPaquete tipoPaquete;
     private Ubicacion ubicacionActual;
     private Ubicacion ubicacionEntrega;
+    private Integer localId;
 
     // Constructores, getters y setters
 }

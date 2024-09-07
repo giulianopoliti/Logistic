@@ -50,6 +50,8 @@ public class ViajeController {
         viaje.setOrden(orden);
         return ResponseEntity.ok(viajeMapper.toDTO(viaje));
     }
+
+    // cuando el driver marca entregado un paquete, tiene que ejecutar esta y entregarPaquete de PaqueteController
     public ResponseEntity<ViajeDTO> completarViaje (@RequestParam ViajeDTO viajeDTO) {
         Viaje viaje = viajeService.findById(viajeDTO.getId());
         viaje.setCompletado(viajeDTO.isCompletado());

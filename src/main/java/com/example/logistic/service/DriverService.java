@@ -8,6 +8,7 @@ import com.example.logistic.model.roles.Driver;
 import com.example.logistic.model.ruta.Ruta;
 import com.example.logistic.repository.DriverRepository;
 import com.example.logistic.repository.PaqueteRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class DriverService {
     private DriverMapper driverMapper;
 
     public Driver getDriverById(Integer id) {
-        Driver driver = driverRepository.findById(id).orElseThrow(() -> new RuntimeException("Driver no encontrado"));
+        Driver driver = driverRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Driver no encontrado"));
         return driver;
     }
 
@@ -28,6 +29,9 @@ public class DriverService {
         return driver.getRutaDiaria();
     }
     public void save (Driver driver) {
+        if (driver == null) {
+            throw new RuntimeException("Error al recibir el driver, es nulo");
+        }
         driverRepository.save(driver);
     }
 

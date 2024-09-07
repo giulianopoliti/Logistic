@@ -7,6 +7,7 @@ import com.example.logistic.model.paquete.Paquete;
 import com.example.logistic.model.roles.Cliente;
 import com.example.logistic.model.ruta.Viaje;
 import com.example.logistic.repository.PaqueteRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,9 @@ public class PaqueteService {
 
     public List<Paquete> findPaquetesByDriverId(Integer driverId) {
         List<Viaje> viajes = viajeService.findViajesByDriverId(driverId);
+        if (viajes == null) {
+            throw new EntityNotFoundException("No se encontraron paquetes");
+        }
         List<Paquete> paquetes = new ArrayList<>();
 
         for (Viaje viaje : viajes) {

@@ -1,6 +1,7 @@
 package com.example.logistic.model.paquete;
 
 import com.example.logistic.model.roles.Local;
+import com.example.logistic.model.roles.Tenant;
 import com.example.logistic.model.ruta.Ubicacion;
 import com.example.logistic.model.roles.Cliente;
 import com.example.logistic.model.roles.Driver;
@@ -26,11 +27,13 @@ public class Paquete {
     private EstadoPaquete estadoPaquete;
     @Enumerated(EnumType.STRING)
     private TipoPaquete tipoPaquete;
-
     @Embedded
     private Ubicacion ubicacionEntrega;
     @Embedded
     private Ubicacion ubicacionActual;
+    @ManyToOne
+    @JoinColumn(name = "tenant_id")
+    private Tenant tenant;
 
     public Paquete() {
 
@@ -54,8 +57,8 @@ public class Paquete {
         this.estadoPaquete = EstadoPaquete.Entregado;
         this.ubicacionActual = ubicacionEntrega;
     }
-    public void marcarPendienteProximoDia () {
-        this.estadoPaquete = EstadoPaquete.PendienteDiaAnterior;
+    public void marcarPaqueteFallido () {
+        this.estadoPaquete = EstadoPaquete.Fallido;
     }
 
 }
