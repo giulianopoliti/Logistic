@@ -15,6 +15,9 @@ import com.example.logistic.service.ClienteService;
 import com.example.logistic.service.LocalService;
 import com.example.logistic.service.PaqueteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,8 +76,11 @@ public class PaqueteController {
 
     // El driver puede marcar cuando no llega a entregar un paquete
 
-    public ResponseEntity<List<PaqueteDTO>> getPaquetesCliente (@RequestBody ClienteDTO clienteDTO) {
-        List<Paquete> paquetes = paqueteService.findPaquetesByClienteId(clienteDTO.getId());
+    public ResponseEntity<List<PaqueteDTO>> getPaquetesCliente (@RequestBody ClienteDTO clienteDTO,
+                                                                @RequestParam int page,
+                                                                @RequestParam int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Paquete> paquetes = paqueteService.findPaquetesByClienteId(clienteDTO.getId(), pageable);
         List<PaqueteDTO> paqueteDTOS = paquetes.stream().map(paqueteMapper::toDTO).collect(Collectors.toList());
         return ResponseEntity.ok(paqueteDTOS);
     }

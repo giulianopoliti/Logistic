@@ -4,12 +4,12 @@ import com.example.logistic.mapper.AdminMapper;
 import com.example.logistic.model.dtos.AdminDTO;
 import com.example.logistic.model.dtos.DriverDTO;
 import com.example.logistic.model.paquete.Paquete;
-import com.example.logistic.model.roles.Admin;
-import com.example.logistic.model.roles.Driver;
-import com.example.logistic.model.roles.Role;
-import com.example.logistic.model.roles.Tenant;
+import com.example.logistic.model.roles.*;
 import com.example.logistic.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +27,8 @@ public class AdminController {
     private AsignacionService asignacionService;
     @Autowired
     private TenantService tenantService;
+    @Autowired
+    private UsuarioService usuarioService;
     @PostMapping
     public ResponseEntity<AdminDTO> crearAdmin (@RequestBody Map<String, Object> adminData) {
         Tenant tenant = tenantService.getById((Integer) adminData.get("tenantId"));
@@ -37,11 +39,18 @@ public class AdminController {
                 tenant,
                 (String)adminData.get("email"),
                 (String)adminData.get("username"),
-                (String)adminData.get("password"),
-                (Role)adminData.get("role")); // reveer esto
+                (String)adminData.get("password"));
+ // reveer esto
         adminService.save(admin);
         return ResponseEntity.ok(adminMapper.toDTO(admin));
     }
+
+    // Paginacion
+    @GetMapping("/{id}")
+    public ResponseEntity<Page<Usuario>> getAllUsersByTenant (@RequestParam int page, @RequestParam int size) {
+        Pageable pageable = PageRequest.of(page,size);
+        return ResponseEntity.ok(usuarioService.getAll(pageable));
+    } // reveer esto,
 
 
 }

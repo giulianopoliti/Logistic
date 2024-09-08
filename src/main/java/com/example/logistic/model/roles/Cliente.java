@@ -16,22 +16,20 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-public class Cliente extends Persona {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+public class Cliente extends Usuario {
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente")
+    @JoinColumn(name = "cliente_id")
     private List<Local> locales = new ArrayList<>();
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente")
-    private List<Paquete> paquetes = new ArrayList<>();
-    @Embedded
-    private IntegracionMeliDriver integracionMeliCliente;
 
-    public Cliente(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String username, String password, Role role) {
-        super(name, lastName, dateOfBirth, tenant, email, username, password, role);
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cliente_id")
+    private List<Paquete> paquetes = new ArrayList<>();
+
+    @Embedded
+    private IntegracionMeliCliente integracionMeliCliente;
+
+    public Cliente(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String username, String password) {
+        super(name, lastName, dateOfBirth, tenant, email, username, password);
     }
 
     public Cliente() {

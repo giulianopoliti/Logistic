@@ -3,9 +3,14 @@ package com.example.logistic.model.roles;
 import jakarta.persistence.*;
 
 import java.util.Date;
-// Persona.java
-@MappedSuperclass
-public abstract class Persona {
+@Entity
+@Table(name = "usuarios")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tipo_usuario", discriminatorType = DiscriminatorType.STRING)
+public abstract class Usuario {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private String name;
     private String lastName;
     private Date dateOfBirth;
@@ -15,10 +20,9 @@ public abstract class Persona {
     private String email;
     private String username;
     private String password; // Será hasheada antes de almacenarse
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    private boolean active;
 
-    public Persona(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String username, String password, Role role) {
+    public Usuario(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String username, String password) {
         this.name = name;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
@@ -26,10 +30,10 @@ public abstract class Persona {
         this.email = email;
         this.username = username;
         this.password = password;
-        this.role = role;
+        this.active = true;
     }
 
-    public Persona() {
+    public Usuario() {
 
     }
     // Getters y setters

@@ -14,33 +14,23 @@ import java.util.List;
 @Entity
 @Setter
 @Getter
-public class Driver extends Persona {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Driver extends Usuario {
     @OneToOne
     @JoinColumn(name = "id_vehiculo")
     private Vehiculo vehiculo;
-    @OneToMany(mappedBy = "driver_id",fetch = FetchType.LAZY)
+
+    @OneToMany(mappedBy = "driver_id", fetch = FetchType.LAZY)
     private List<Ruta> rutas;
-    @OneToMany(mappedBy = "driver_id",fetch = FetchType.LAZY)
+
+    @OneToMany(mappedBy = "driver_id", fetch = FetchType.LAZY)
     private List<Viaje> viajes;
+
     @Embedded
     private IntegracionMeliDriver integracionMeliDriver;
 
-    public Driver(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String username, String password, Role role) {
-        super(name, lastName, dateOfBirth, tenant, email, username, password, role);
-    }
 
-    public Driver(
-                  String name,
-                  String lastName,
-                  Date dateOfBirth,
-                  Tenant tenant,
-                  String email,
-                  Vehiculo vehiculo) {
-
-        this.vehiculo = vehiculo;
+    public Driver(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String username, String password) {
+        super(name, lastName, dateOfBirth, tenant, email, username, password);
     }
 
     public Driver() {
