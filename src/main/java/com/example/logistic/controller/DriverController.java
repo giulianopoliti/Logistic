@@ -2,7 +2,6 @@ package com.example.logistic.controller;
 
 
 import com.example.logistic.mapper.DriverMapper;
-import com.example.logistic.model.dtos.ClienteDTO;
 import com.example.logistic.model.dtos.DriverDTO;
 import com.example.logistic.model.roles.*;
 import com.example.logistic.model.ruta.Ruta;

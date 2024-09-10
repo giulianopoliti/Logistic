@@ -1,4 +1,4 @@
-package com.example.logistic.model.paquete;
+package com.example.logistic.model.ruta.paquete;
 
 public enum EstadoPaquete {
     EnLoDelCliente,

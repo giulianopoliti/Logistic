@@ -1,9 +1,10 @@
 package com.example.logistic.model.ruta;
 
-import com.example.logistic.model.paquete.Paquete;
-import com.example.logistic.model.paquete.TipoPaquete;
+
 import com.example.logistic.model.roles.Driver;
 import com.example.logistic.model.roles.Tenant;
+import com.example.logistic.model.ruta.paquete.EstadoPaquete;
+import com.example.logistic.model.ruta.paquete.Pedido;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,8 +20,8 @@ public class Ruta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @OneToMany(mappedBy = "ruta", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name="id_viaje")
-    private List<Viaje> viajes = new ArrayList<>();
+    @JoinColumn(name="id_pedido")
+    private List<Pedido> pedidos = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "id_driver")
@@ -35,35 +36,23 @@ public class Ruta {
     public Ruta() {
 
     }
-    public Ruta (Driver driver, List<Paquete> paquetes) {
-        for (int i = 0; i < paquetes.size(); i++) {
-            Viaje viaje = new Viaje(driver, paquetes.get(i));
-            viaje.setDriver(driver);
-            if (this.viajes.size() == 0) {
-            } else {
-                viaje.setUbicacionOrigen(paquetes.get(i-1).getUbicacionEntrega());
-            }
-            viaje.setOrden(this.viajes.size()-1);
-            this.viajes.add(viaje);
-        }
+    public Ruta (Driver driver, List<Pedido> pedidos) {
+        this.pedidos = pedidos;
         this.driver = driver;
+        this.date = new Date();
     }
-    public void addViaje (Driver driver, Paquete paquete) {
-        Viaje viaje = new Viaje(driver, paquete);
-        viaje.setOrden(this.viajes.size());
-        this.viajes.add(viaje);
+    public void addPedido (Pedido pedido) {
+        this.pedidos.add(pedido);
     }
 
-    public void removeViaje (Viaje viaje) {
-        this.viajes.remove(viaje);
+    public void removePedido (Pedido pedido) {
+        this.pedidos.remove(pedido);
     }
-    public void cambiarOrden(Viaje viaje1, Viaje viaje2){
 
-    }
 
     public boolean isCompletada() {
-        for (int i = 0; i < viajes.size(); i++) {
-            if (!viajes.get(i).isCompletado()) {
+        for (int i = 0; i < pedidos.size(); i++) {
+            if (!(pedidos.get(i).getEstadoPaquete() == EstadoPaquete.Entregado)) {
                 return false;
             }
         } return true;

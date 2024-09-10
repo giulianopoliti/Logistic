@@ -1,9 +1,8 @@
 package com.example.logistic.model.roles;
 
-import com.example.logistic.model.paquete.Paquete;
 import com.example.logistic.model.roles.meli.IntegracionMeliDriver;
 import com.example.logistic.model.ruta.Ruta;
-import com.example.logistic.model.ruta.Viaje;
+import com.example.logistic.model.ruta.paquete.Pedido;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,9 +22,10 @@ public class Driver extends Usuario {
     private List<Ruta> rutas;
 
     @OneToMany(mappedBy = "driver_id", fetch = FetchType.LAZY)
-    private List<Viaje> viajes;
+    private List<Pedido> pedidos;
 
-    @Embedded
+    @OneToOne
+    @JoinColumn(name = "integracion_id")
     private IntegracionMeliDriver integracionMeliDriver;
 
 
@@ -41,11 +41,11 @@ public class Driver extends Usuario {
     }
 
     // ver que devolver aca
-    public Ruta crearRuta (List<Paquete> paquetes) {
+    public Ruta crearRuta (List<Pedido> pedidos) {
         Ruta ruta = new Ruta();
-        for (int i = 0; i < paquetes.size(); i++) {
-            ruta.addViaje(this, paquetes.get(i));
-        }
+        ruta.setPedidos(pedidos);
+        ruta.setDriver(this);
+        this.rutas.add(ruta);
         return ruta;
     }
 

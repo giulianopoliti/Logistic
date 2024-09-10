@@ -1,13 +1,10 @@
 package com.example.logistic.service;
 
 import com.example.logistic.mapper.DriverMapper;
-import com.example.logistic.model.dtos.DriverDTO;
-import com.example.logistic.model.paquete.EstadoPaquete;
 import com.example.logistic.model.paquete.Paquete;
 import com.example.logistic.model.roles.Driver;
 import com.example.logistic.model.ruta.Ruta;
 import com.example.logistic.repository.DriverRepository;
-import com.example.logistic.repository.PaqueteRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +23,6 @@ public class DriverService {
 
     public Ruta getRutaDiaria(Integer driverId) {
         Driver driver = getDriverById(driverId);
-        return driver.getRutaDiaria();
     }
     public void save (Driver driver) {
         if (driver == null) {

@@ -7,8 +7,8 @@ import lombok.Setter;
 import java.util.List;
 @Getter
 @Setter
-public class ClienteDTO extends PersonaDTO{
-    public ClienteDTO(Integer id, String nombre, String apellido, String username, Integer tenantId) {
+public class VendedorDTO extends PersonaDTO{
+    public VendedorDTO(Integer id, String nombre, String apellido, String username, Integer tenantId) {
         super(id, nombre, apellido, username, tenantId);
     }
 

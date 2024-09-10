@@ -15,6 +15,4 @@ public class RutaDTO {
     private Ubicacion ubicacionDeposito;
     private Integer driverId;
     private List<ViajeDTO> viajes;
-
-    // Constructores, getters y setters
 }

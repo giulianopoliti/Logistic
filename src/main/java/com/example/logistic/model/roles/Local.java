@@ -13,8 +13,8 @@ public class Local {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ManyToOne
-    @JoinColumn(name = "cliente_id")
-    private Cliente cliente;
+    @JoinColumn(name = "vendedor_id")
+    private Vendedor vendedor;
     @Embedded
     private Ubicacion ubicacion;
 }

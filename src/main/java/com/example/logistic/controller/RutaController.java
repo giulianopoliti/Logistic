@@ -1,27 +1,24 @@
 package com.example.logistic.controller;
 
 import com.example.logistic.mapper.DriverMapper;
-import com.example.logistic.mapper.PaqueteMapper;
+import com.example.logistic.mapper.PedidoMapper;
 import com.example.logistic.mapper.RutaMapper;
 import com.example.logistic.mapper.ViajeMapper;
 import com.example.logistic.model.dtos.DriverDTO;
-import com.example.logistic.model.dtos.PaqueteDTO;
 import com.example.logistic.model.dtos.RutaDTO;
 import com.example.logistic.model.dtos.ViajeDTO;
-import com.example.logistic.model.paquete.Paquete;
 import com.example.logistic.model.roles.Driver;
 import com.example.logistic.model.roles.Tenant;
 import com.example.logistic.model.ruta.Ruta;
-import com.example.logistic.model.ruta.Viaje;
+import com.example.logistic.model.ruta.paquete.Pedido;
 import com.example.logistic.service.DriverService;
-import com.example.logistic.service.PaqueteService;
+import com.example.logistic.service.PedidoService;
 import com.example.logistic.service.RutaService;
 import com.example.logistic.service.ViajeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,20 +28,19 @@ import java.util.stream.Collectors;
 public class RutaController {
     @Autowired
     private RutaService rutaService;
-    @Autowired
-    private ViajeController viajeController;
+
     @Autowired
     private ViajeService viajeService;
     @Autowired
     private ViajeMapper viajeMapper;
     @Autowired
-    private PaqueteMapper paqueteMapper;
+    private PedidoMapper pedidoMapper;
     @Autowired
     private DriverMapper driverMapper;
     @Autowired
     private RutaMapper rutaMapper;
     @Autowired
-    private PaqueteService paqueteService;
+    private PedidoService pedidoService;
     @Autowired
     private DriverService driverService;
 
@@ -55,10 +51,10 @@ public class RutaController {
     }
 
     @PostMapping
-    public ResponseEntity<RutaDTO> crearRuta(@RequestParam List<PaqueteDTO> paquetesDTO,
+    public ResponseEntity<RutaDTO> crearRuta(@RequestParam List<PedidoDTO> pedidoDTOS,
                                           DriverDTO driverDTO) {
-        List<Paquete> paquetes = paquetesDTO.stream()
-                .map(paqueteDTO -> paqueteService.getPaqueteById(paqueteDTO.getId()))
+        List<Pedido> paquetes = pedidoDTOS.stream()
+                .map(paqueteDTO -> pedidoService.getPaqueteById(paqueteDTO.getId()))
                 .collect(Collectors.toList());
         Driver driver = driverService.getDriverById(driverDTO.getId());
         Ruta ruta = new Ruta(driver, paquetes);
@@ -76,7 +72,7 @@ public class RutaController {
     @PutMapping("/{id}/")
     public ResponseEntity<Ruta> addViaje (@RequestParam DriverDTO driverDTO, PaqueteDTO paqueteDTO) {
         Ruta ruta = rutaService.findByDriverId(driverDTO.getId());
-        ruta.addViaje(driverMapper.toEntity(driverDTO), paqueteMapper.toEntity(paqueteDTO));
+        ruta.addPedido(driverMapper.toEntity(driverDTO), pe.toEntity(paqueteDTO));
         return ResponseEntity.ok(ruta);
     }
     public ResponseEntity<Ruta> finalizarRuta (DriverDTO driverDTO) {
@@ -96,11 +92,11 @@ public class RutaController {
         return ResponseEntity.ok(ruta);
     }
     // aca esta la otra forma
-    public ResponseEntity<List<ViajeDTO>> verViajesDTOByRuta (@RequestParam RutaDTO rutaDTO) {
+    /*public ResponseEntity<List<ViajeDTO>> verViajesDTOByRuta (@RequestParam RutaDTO rutaDTO) {
         Ruta ruta = rutaService.getRutaById(rutaDTO.getId());
-        List<ViajeDTO> viajeDTOS = ruta.getViajes().stream().map(viajeMapper::toDTO).collect(Collectors.toList());
+        List<ViajeDTO> viajeDTOS = ruta.getPedidos().stream().map(::toDTO).collect(Collectors.toList());
         return ResponseEntity.ok(viajeDTOS);
-    }
+    }*/
 
 
 }

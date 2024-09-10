@@ -1,10 +1,8 @@
 package com.example.logistic.model.roles;
 
-import com.example.logistic.model.roles.meli.IntegracionMeliCliente;
 import com.example.logistic.model.roles.meli.IntegracionMeliDriver;
-import com.example.logistic.model.ruta.Ubicacion;
-import com.example.logistic.model.paquete.Paquete;
-import com.example.logistic.model.paquete.TipoPaquete;
+import com.example.logistic.model.roles.meli.IntegracionMeliVendedor;
+import com.example.logistic.model.ruta.paquete.Pedido;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,23 +14,24 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-public class Cliente extends Usuario {
+public class Vendedor extends Usuario {
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_id")
+    @JoinColumn(name = "vendedor_id")
     private List<Local> locales = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_id")
-    private List<Paquete> paquetes = new ArrayList<>();
+    @JoinColumn(name = "vendedor_id")
+    private List<Pedido> pedidos = new ArrayList<>();
 
-    @Embedded
-    private IntegracionMeliCliente integracionMeliCliente;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "vendedor_id")
+    private List<IntegracionMeliVendedor> integracionMeliVendedor;
 
-    public Cliente(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String username, String password) {
+    public Vendedor(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String username, String password) {
         super(name, lastName, dateOfBirth, tenant, email, username, password);
     }
 
-    public Cliente() {
+    public Vendedor() {
         super();
     }
 
@@ -44,8 +43,8 @@ public class Cliente extends Usuario {
         this.locales.remove(local);
     }
 
-    public void removePaquete(Paquete paquete) {
-        this.paquetes.remove(paquete);
+    public void removePaquete(Pedido pedido) {
+        this.pedidos.remove(pedido);
     }
 
     public void cargarPaquetesExcel() {

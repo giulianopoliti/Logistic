@@ -1,9 +1,9 @@
-package com.example.logistic.model.paquete;
+package com.example.logistic.model.ruta.paquete;
 
-import com.example.logistic.model.roles.Local;
 import com.example.logistic.model.roles.Tenant;
+import com.example.logistic.model.roles.Vendedor;
+import com.example.logistic.model.ruta.Ruta;
 import com.example.logistic.model.ruta.Ubicacion;
-import com.example.logistic.model.roles.Cliente;
 import com.example.logistic.model.roles.Driver;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -13,20 +13,21 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
-public class Paquete {
+@Table(name = "paquetes")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tipo_pedido", discriminatorType = DiscriminatorType.STRING)
+public abstract class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String contenido;
     @ManyToOne
-    @JoinColumn(name = "id_cliente")
-    private Cliente cliente;
+    @JoinColumn(name = "id_vendedor")
+    private Vendedor vendedor;
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
     @Enumerated(EnumType.STRING)
     private EstadoPaquete estadoPaquete;
-    @Enumerated(EnumType.STRING)
-    private TipoPaquete tipoPaquete;
     @Embedded
     private Ubicacion ubicacionEntrega;
     @Embedded
@@ -34,17 +35,26 @@ public class Paquete {
     @ManyToOne
     @JoinColumn(name = "tenant_id")
     private Tenant tenant;
+    @ManyToOne
+    @JoinColumn(name = "ruta_id")
+    private Ruta ruta;
+    @ManyToOne
+    @JoinColumn(name = "driver_id")
+    private Driver driver;
+    private double precio;
 
-    public Paquete() {
-
+    public Pedido() {
+        this.date = new Date();
     }
-    public Paquete(String contenido, Cliente cliente, TipoPaquete tipoPaquete, Ubicacion ubicacionEntrega, Local local) {
+
+    public Pedido(String contenido, Vendedor vendedor, Ubicacion ubicacionEntrega, Ubicacion ubicacionActual, Tenant tenant, Driver driver) {
+        this();
         this.contenido = contenido;
-        this.cliente = cliente;
-        this.estadoPaquete = EstadoPaquete.EnLoDelCliente;
-        this.ubicacionActual = local.getUbicacion();
-        this.tipoPaquete = tipoPaquete;
+        this.vendedor = vendedor;
         this.ubicacionEntrega = ubicacionEntrega;
+        this.ubicacionActual = ubicacionActual;
+        this.tenant = tenant;
+        this.driver = driver;
     }
 
     public void llegarADeposito() {

@@ -1,7 +1,7 @@
 package com.example.logistic.repository;
 
-import com.example.logistic.model.roles.Cliente;
 import com.example.logistic.model.roles.Tenant;
+import com.example.logistic.model.roles.Vendedor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ClienteRepository extends JpaRepository<Cliente, Integer>{
+public interface VendedorRepository extends JpaRepository<Vendedor, Integer>{
 
     // Consulta personalizada utilizando JPQL
-    @Query("SELECT c FROM Cliente c WHERE c.tenant = :tenant")
-    List<Cliente> findClientesByTenant(Tenant tenant);
+    @Query("SELECT c FROM Vendedor c WHERE c.tenant = :tenant")
+    List<Vendedor> findClientesByTenant(Tenant tenant);
 }

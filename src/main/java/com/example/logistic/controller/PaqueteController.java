@@ -1,19 +1,22 @@
 package com.example.logistic.controller;
 
-import com.example.logistic.mapper.ClienteMapper;
-import com.example.logistic.mapper.PaqueteMapper;
-import com.example.logistic.model.dtos.ClienteDTO;
+
+import com.example.logistic.mapper.PedidoMapper;
+import com.example.logistic.mapper.VendedorMapper;
 import com.example.logistic.model.dtos.DriverDTO;
-import com.example.logistic.model.dtos.PaqueteDTO;
-import com.example.logistic.model.paquete.EstadoPaquete;
-import com.example.logistic.model.paquete.Paquete;
-import com.example.logistic.model.paquete.TipoPaquete;
-import com.example.logistic.model.roles.Cliente;
+import com.example.logistic.model.dtos.PedidoDTO;
+import com.example.logistic.model.dtos.TipoPedido;
+import com.example.logistic.model.dtos.VendedorDTO;
+import com.example.logistic.model.roles.Vendedor;
+import com.example.logistic.model.ruta.paquete.EstadoPaquete;
+
 import com.example.logistic.model.roles.Local;
 import com.example.logistic.model.ruta.Ubicacion;
-import com.example.logistic.service.ClienteService;
+import com.example.logistic.model.ruta.paquete.Pedido;
+import com.example.logistic.model.ruta.paquete.PedidoParticular;
 import com.example.logistic.service.LocalService;
-import com.example.logistic.service.PaqueteService;
+import com.example.logistic.service.PedidoService;
+import com.example.logistic.service.VendedorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,85 +30,85 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/paquetes")
-public class PaqueteController {
+public class PedidoController {
     @Autowired
-    private PaqueteService paqueteService;
+    private PedidoService pedidoService;
     @Autowired
-    private PaqueteMapper paqueteMapper;
+    private PedidoMapper pedidoMapper;
     @Autowired
-    private ClienteMapper clienteMapper;
+    private VendedorMapper vendedorMapper;
     @Autowired
-    private ClienteService clienteService;
+    private VendedorService vendedorService;
     @Autowired
     private LocalService localService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<PaqueteDTO> getPaqueteDTO(@PathVariable Integer id) {
-        return ResponseEntity.ok(paqueteMapper.toDTO(paqueteService.getPaqueteById(id)));
+    public ResponseEntity<PedidoDTO> getPaqueteDTO(@PathVariable Integer id) {
+        return ResponseEntity.ok(pedidoMapper.toDTO(pedidoService.getPaqueteById(id)));
     }
 
     // on click en paquete, que te muestre todo
-    public ResponseEntity<Paquete> getPaquete (@RequestParam PaqueteDTO paqueteDTO) {
-        Paquete paquete = paqueteService.getPaqueteById(paqueteDTO.getId());
-        return ResponseEntity.ok(paquete);
+    public ResponseEntity<Pedido> getPaquete (@RequestParam PedidoDTO pedidoDTO) {
+        Pedido pedido = pedidoService.getPaqueteById(pedidoDTO.getId());
+        return ResponseEntity.ok(pedido);
     }
-    public ResponseEntity<PaqueteDTO> cargarPaqueteParticular(String contenido,
-                                                           ClienteDTO clienteDTO,
+    public ResponseEntity<PedidoDTO> cargarPaqueteParticular(String contenido,
+                                                           VendedorDTO vendedorDTO,
                                                            Ubicacion ubicacionEntrega,
                                                            Local local) {
-        Paquete paquete = new Paquete(contenido, clienteService.findById(clienteDTO.getId()), TipoPaquete.Particular, ubicacionEntrega, local);
-        paqueteService.save(paquete);
-        return ResponseEntity.ok(paqueteMapper.toDTO(paquete));
+        Pedido pedido = new PedidoParticular();
+
+        pedidoService.save(pedido);
+        return ResponseEntity.ok(pedidoMapper.toDTO(pedido));
     }
-    public ResponseEntity<PaqueteDTO> cargarPaqueteML (String contenido,
-                                                       ClienteDTO clienteDTO,
+    public ResponseEntity<PedidoDTO> cargarPaqueteML (String contenido,
+                                                       VendedorDTO vendedorDTO,
                                                        Ubicacion ubicacionEntrega,
                                                        Local local) {
-        Paquete paquete = new Paquete(contenido, clienteService.findById(clienteDTO.getId()), TipoPaquete.MercadoLibre, ubicacionEntrega, local);
-        paqueteService.save(paquete);
-        return ResponseEntity.ok(paqueteMapper.toDTO(paquete));
+        Pedido pedido = new PedidoParticular(contenido, clienteService.findById(clienteDTO.getId()), TipoPaquete.MercadoLibre, ubicacionEntrega, local);
+        pedidoService.save(pedido);
+        return ResponseEntity.ok(pedidoMapper.toDTO(pedido));
     }
 
     // Driver marca cuando entrega un paquete
-    public ResponseEntity<PaqueteDTO> marcarPaqueteEntregado (@RequestParam PaqueteDTO paqueteDTO) {
-        Paquete paquete = paqueteMapper.toEntity(paqueteDTO);
-        paquete.marcarPaqueteEntregado();
-        paqueteService.save(paquete);
-        return ResponseEntity.ok(paqueteMapper.toDTO(paquete));
+    public ResponseEntity<PedidoDTO> marcarPaqueteEntregado (@RequestParam PedidoDTO pedidoDTO) {
+        Pedido pedido = pedidoMapper.toEntity(pedidoDTO);
+        pedido.marcarPaqueteEntregado();
+        pedidoService.save(pedido);
+        return ResponseEntity.ok(pedidoMapper.toDTO(pedido));
     }
 
     // El driver puede marcar cuando no llega a entregar un paquete
 
-    public ResponseEntity<List<PaqueteDTO>> getPaquetesCliente (@RequestBody ClienteDTO clienteDTO,
+    public ResponseEntity<List<PedidoDTO>> getPaquetesCliente (@RequestBody VendedorDTO vendedorDTO,
                                                                 @RequestParam int page,
                                                                 @RequestParam int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Paquete> paquetes = paqueteService.findPaquetesByClienteId(clienteDTO.getId(), pageable);
-        List<PaqueteDTO> paqueteDTOS = paquetes.stream().map(paqueteMapper::toDTO).collect(Collectors.toList());
+        Page<Pedido> paquetes = pedidoService.findPedidosByDriverId(vendedorDTO.getId(), pageable);
+        List<PedidoDTO> paqueteDTOS = paquetes.stream().map(pedidoMapper::toDTO).collect(Collectors.toList());
         return ResponseEntity.ok(paqueteDTOS);
     }
-    public ResponseEntity<List<PaqueteDTO>> getPaquetesByDriver (DriverDTO driverDTO) {
+    public ResponseEntity<List<PedidoDTO>> getPaquetesByDriver (DriverDTO driverDTO) {
         if (driverDTO == null) {
             throw new RuntimeException("Driver es nulo");
         }
-        List<Paquete> paquetes = paqueteService.findPaquetesByDriverId(driverDTO.getId());
+        List<Pedido> paquetes = pedidoService.findPedidosByDriverId(driverDTO.getId());
         // re clean esta linea
-        List<PaqueteDTO> paqueteDTOS = paquetes.stream().map(paqueteMapper::toDTO).collect(Collectors.toList());
+        List<PedidoDTO> paqueteDTOS = paquetes.stream().map(pedidoMapper::toDTO).collect(Collectors.toList());
         return ResponseEntity.ok(paqueteDTOS);
     }
     // reveer esta func, cargar muchos paquetes de manera particular, puede ser excel y guarda en db,
     // hay que ver que info nos mandamos desde el front
-    public ResponseEntity<List<PaqueteDTO>> cargarPaquetesParticular(@RequestBody List<PaqueteDTO> paqueteDTOS) {
-        List<Paquete> paquetes = new ArrayList<>();
-        for (int i = 0; i < paqueteDTOS.size(); i++) {
-            Cliente cliente = clienteService.findById(paqueteDTOS.get(i).getClienteId());
-            Paquete paquete = new Paquete(paqueteDTOS.get(i).getContenido(),
-                    cliente,
-                    TipoPaquete.Particular,
-                    paqueteDTOS.get(i).getUbicacionEntrega(),
-                    localService.getById(paqueteDTOS.get(i).getLocalId()));
-            paquetes.add(paquete);
-            paqueteService.save(paquete);
+    public ResponseEntity<List<PedidoDTO>> cargarPaquetesParticular(@RequestBody List<PedidoDTO> pedidoDTOS) {
+        List<Pedido> paquetes = new ArrayList<>();
+        for (int i = 0; i < pedidoDTOS.size(); i++) {
+            Vendedor vendedor = vendedorService.findById(pedidoDTOS.get(i).getClienteId());
+            Pedido pedido = new PedidoParticular(pedidoDTOS.get(i).getContenido(),
+                    vendedor,
+                    pedidoDTOS.get(i).getUbicacionEntrega(),
+                    localService.getById(pedidoDTOS.get(i).getLocalId()));
+            paquetes.add(pedido);
+            pedidoService.save(pedido);
         }
         return ResponseEntity.ok(paqueteDTOS);
     }

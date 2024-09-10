@@ -3,7 +3,6 @@ package com.example.logistic.controller;
 import com.example.logistic.mapper.AdminMapper;
 import com.example.logistic.model.dtos.AdminDTO;
 import com.example.logistic.model.dtos.DriverDTO;
-import com.example.logistic.model.paquete.Paquete;
 import com.example.logistic.model.roles.*;
 import com.example.logistic.service.*;
 import org.springframework.beans.factory.annotation.Autowired;

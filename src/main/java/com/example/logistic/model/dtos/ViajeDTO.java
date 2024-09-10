@@ -15,6 +15,5 @@ public class ViajeDTO {
     private boolean completado;
     private Date date;
     private TipoViaje tipoViaje;
-    // Constructores, getters y setters
 }
 
