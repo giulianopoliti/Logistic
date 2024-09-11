@@ -5,10 +5,9 @@ import com.example.logistic.mapper.PedidoMapper;
 import com.example.logistic.mapper.VendedorMapper;
 import com.example.logistic.model.dtos.DriverDTO;
 import com.example.logistic.model.dtos.PedidoDTO;
-import com.example.logistic.model.dtos.TipoPedido;
 import com.example.logistic.model.dtos.VendedorDTO;
 import com.example.logistic.model.roles.Vendedor;
-import com.example.logistic.model.ruta.paquete.EstadoPaquete;
+import com.example.logistic.model.ruta.paquete.EstadoPedido;
 
 import com.example.logistic.model.roles.Local;
 import com.example.logistic.model.ruta.Ubicacion;
@@ -19,7 +18,6 @@ import com.example.logistic.service.LocalService;
 import com.example.logistic.service.PedidoService;
 import com.example.logistic.service.VendedorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -127,7 +125,7 @@ public class PedidoController {
     // ya esta en el sistema
     public ResponseEntity<PedidoDTO> marcarPaqueteDespachado (PedidoDTO pedidoDTO) {
         Pedido pedido = pedidoService.getPedidoById(pedidoDTO.getId());
-        pedido.setEstadoPaquete(EstadoPaquete.Despachado);
+        pedido.setEstadoPedido(EstadoPedido.DESPACHADO);
         pedidoService.save(pedido);
         // ver si crear viaje aca o no
         return ResponseEntity.ok(pedidoMapper.toDTO(pedido));

@@ -50,4 +50,7 @@ public class Vendedor extends Usuario {
     public void cargarPaquetesExcel() {
         /// implementar logica
     }
+    public boolean isIntegrateMeli () {
+        return !this.integracionMeliVendedor.isEmpty();
+    }
 }

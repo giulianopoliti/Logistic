@@ -1,6 +1,6 @@
 package com.example.logistic.model.dtos;
 
-import com.example.logistic.model.ruta.paquete.EstadoPaquete;
+import com.example.logistic.model.ruta.paquete.EstadoPedido;
 import com.example.logistic.model.ruta.Ubicacion;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +13,7 @@ public class PedidoDTO {
     private String contenido;
     private Integer clienteId;
     private Date date;
-    private EstadoPaquete estadoPaquete;
+    private EstadoPedido estadoPedido;
     private Ubicacion ubicacionActual;
     private Ubicacion ubicacionEntrega;
     private Integer localId;

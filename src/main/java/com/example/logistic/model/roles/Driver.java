@@ -24,9 +24,11 @@ public class Driver extends Usuario {
     @OneToMany(mappedBy = "driver_id", fetch = FetchType.LAZY)
     private List<Pedido> pedidos;
 
-    @OneToOne
-    @JoinColumn(name = "integracion_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "integracion_meli_id")
     private IntegracionMeliDriver integracionMeliDriver;
+    @Enumerated(EnumType.STRING)
+    private EstadoDriver estadoDriver;
 
 
     public Driver(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String username, String password) {

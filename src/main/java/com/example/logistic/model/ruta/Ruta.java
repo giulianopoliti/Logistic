@@ -3,7 +3,7 @@ package com.example.logistic.model.ruta;
 
 import com.example.logistic.model.roles.Driver;
 import com.example.logistic.model.roles.Tenant;
-import com.example.logistic.model.ruta.paquete.EstadoPaquete;
+import com.example.logistic.model.ruta.paquete.EstadoPedido;
 import com.example.logistic.model.ruta.paquete.Pedido;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -52,7 +52,7 @@ public class Ruta {
 
     public boolean isCompletada() {
         for (int i = 0; i < pedidos.size(); i++) {
-            if (!(pedidos.get(i).getEstadoPaquete() == EstadoPaquete.Entregado)) {
+            if (!(pedidos.get(i).getEstadoPedido() == EstadoPedido.ENTREGADO)) {
                 return false;
             }
         } return true;

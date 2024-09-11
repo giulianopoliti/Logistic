@@ -1,7 +1,7 @@
 package com.example.logistic.service;
 
 import com.example.logistic.mapper.PedidoMapper;
-import com.example.logistic.model.ruta.paquete.EstadoPaquete;
+import com.example.logistic.model.ruta.paquete.EstadoPedido;
 import com.example.logistic.model.ruta.paquete.Pedido;
 import com.example.logistic.repository.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class PedidoService {
         return pedidoRepository.findById(id).orElseThrow(() -> new RuntimeException("Paquete no encontrado"));
     }
 
-    public Pedido actualizarEstadoPedido(Integer id, EstadoPaquete estado) {
+    public Pedido actualizarEstadoPedido(Integer id, EstadoPedido estado) {
         Pedido pedido = getPedidoById(id);
         pedido.setEstadoPaquete(estado);
         return pedidoRepository.save(pedido);

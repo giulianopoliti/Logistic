@@ -1,6 +1,7 @@
 package com.example.logistic.model.roles;
 
 import jakarta.persistence.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Date;
 @Entity
@@ -10,7 +11,7 @@ import java.util.Date;
 public abstract class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String name;
     private String lastName;
     private Date dateOfBirth;
@@ -19,22 +20,31 @@ public abstract class Usuario {
     private Tenant tenant;
     private String email;
     private String username;
-    private String password; // Será hasheada antes de almacenarse
+    @Column(name = "password_hash")
+    private String passwordHash; // Renombrado para reflejar que almacena el hash de la contraseña
     private boolean active;
 
-    public Usuario(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String username, String password) {
+    public Usuario(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String username, String passwordHash) {
         this.name = name;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.tenant = tenant;
         this.email = email;
         this.username = username;
-        this.password = password;
+        this.passwordHash = passwordHash;
         this.active = true;
     }
 
     public Usuario() {
 
     }
-    // Getters y setters
+    // Método para hashear la contraseña
+    public void setPassword(String password) {
+        this.passwordHash = hashPassword(password);
+    }
+    // Método para hashear una contraseña usando BCrypt
+    private String hashPassword(String password) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder.encode(password);
+    }
 }

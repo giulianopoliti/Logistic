@@ -1,6 +1,8 @@
 package com.example.logistic.model.roles.meli;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
@@ -8,6 +10,8 @@ import java.util.Date;
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo_integracion", discriminatorType = DiscriminatorType.STRING)
+@Getter
+@Setter
 public abstract class IntegracionMeli {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,10 +21,5 @@ public abstract class IntegracionMeli {
     private String refreshToken;
     private Date expiresAt;
 
-    public boolean isTokenExpired() {
-        return new Date().after(this.expiresAt);
-    }
-
-    public void refreshToken(){};
 }
 

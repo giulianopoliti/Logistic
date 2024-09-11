@@ -13,21 +13,25 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
-@Table(name = "paquetes")
+@Table(name = "pedidos")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo_pedido", discriminatorType = DiscriminatorType.STRING)
 public abstract class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
+
     private String contenido;
+
     @ManyToOne
     @JoinColumn(name = "id_vendedor")
     private Vendedor vendedor;
+
     @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    private Date fechaCreacion;
+
     @Enumerated(EnumType.STRING)
-    private EstadoPaquete estadoPaquete;
+    private EstadoPedido estadoPedido;
     @Embedded
     private Ubicacion ubicacionEntrega;
     @Embedded
@@ -42,12 +46,14 @@ public abstract class Pedido {
     @JoinColumn(name = "driver_id")
     private Driver driver;
     private double precio;
+    private String compradorName;
+    private String observacion;
 
     public Pedido() {
-        this.date = new Date();
+        this.fechaCreacion = new Date();
     }
 
-    public Pedido(String contenido, Vendedor vendedor, Ubicacion ubicacionEntrega, Ubicacion ubicacionActual, Tenant tenant, Driver driver) {
+    public Pedido(String contenido, Vendedor vendedor, Ubicacion ubicacionEntrega, Ubicacion ubicacionActual, Tenant tenant, Driver driver, String compradorName) {
         this();
         this.contenido = contenido;
         this.vendedor = vendedor;
@@ -55,20 +61,21 @@ public abstract class Pedido {
         this.ubicacionActual = ubicacionActual;
         this.tenant = tenant;
         this.driver = driver;
+        this.compradorName = compradorName;
     }
 
     public void llegarADeposito() {
-        this.estadoPaquete = EstadoPaquete.EnDepositoSinDriver;
+        this.estadoPedido = EstadoPedido.EN_DEPOSITO;
     }
     public void encaminarPaquete () {
-        this.estadoPaquete = EstadoPaquete.EnCamino;
+        this.estadoPedido = EstadoPedido.EN_CAMINO;
     }
     public void marcarPaqueteEntregado() {
-        this.estadoPaquete = EstadoPaquete.Entregado;
+        this.estadoPedido = EstadoPedido.ENTREGADO;
         this.ubicacionActual = ubicacionEntrega;
     }
     public void marcarPaqueteFallido () {
-        this.estadoPaquete = EstadoPaquete.Fallido;
+        this.estadoPedido = EstadoPedido.FALLIDO;
     }
 
 }
