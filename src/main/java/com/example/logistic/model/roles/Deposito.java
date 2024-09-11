@@ -12,7 +12,7 @@ import lombok.Setter;
 public class Deposito {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     @Embedded
     private Ubicacion ubicacion;
     @ManyToOne

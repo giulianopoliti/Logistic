@@ -38,7 +38,7 @@ public class DriverController {
         return ResponseEntity.ok(driverMapper.toDTO(driver));
     }
     @PutMapping("/agregarVehiculo")
-    public ResponseEntity<DriverDTO> agregarVehiculo(@RequestParam Integer driverId, @RequestBody Vehiculo vehiculo) {
+    public ResponseEntity<DriverDTO> agregarVehiculo(@RequestParam Long driverId, @RequestBody Vehiculo vehiculo) {
         // Obtener el Driver por su ID
         Driver driver = driverService.getDriverById(driverId);
         if (driver == null) {
@@ -54,7 +54,7 @@ public class DriverController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Driver> getDriver(@PathVariable Integer id) {
+    public ResponseEntity<Driver> getDriver(@PathVariable Long id) {
         Driver driver = driverService.getDriverById(id);
         DriverDTO driverDTO = driverMapper.toDTO(driver);
         return ResponseEntity.ok(driver);

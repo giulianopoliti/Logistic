@@ -1,9 +1,6 @@
 package com.example.logistic.model.roles;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +11,12 @@ import java.util.List;
 public class Tenant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String name;
+    private boolean active;
+    private String domain;
+    private String email;
+    @OneToMany(mappedBy = "tenant")
+    private List<Admin> admins;
+    private String logoURL;
 }

@@ -18,13 +18,13 @@ import java.util.List;
 public class Ruta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
+
     @OneToMany(mappedBy = "ruta", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name="id_pedido")
     private List<Pedido> pedidos = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "id_driver")
+    @JoinColumn(name = "driver_id")
     private Driver driver;
     private boolean completada;
     @Temporal(TemporalType.DATE)

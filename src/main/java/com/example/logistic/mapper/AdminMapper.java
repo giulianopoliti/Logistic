@@ -5,7 +5,7 @@ import com.example.logistic.model.roles.Admin;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper (componentModel = "spring")
 public interface AdminMapper {
     @Mapping(source = "tenant.id", target = "tenantId")
     AdminDTO toDTO(Admin admin);

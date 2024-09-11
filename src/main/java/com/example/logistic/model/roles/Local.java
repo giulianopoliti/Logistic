@@ -11,7 +11,7 @@ import lombok.Setter;
 public class Local {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     @ManyToOne
     @JoinColumn(name = "vendedor_id")
     private Vendedor vendedor;

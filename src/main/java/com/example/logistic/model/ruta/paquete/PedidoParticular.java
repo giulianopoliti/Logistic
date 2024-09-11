@@ -12,8 +12,8 @@ import lombok.Setter;
 @Setter
 @Getter
 public class PedidoParticular extends Pedido{
-    public PedidoParticular(String contenido, Vendedor vendedor, Ubicacion ubicacionEntrega, Ubicacion ubicacionActual, Tenant tenant, Driver driver) {
-        super(contenido, vendedor, ubicacionEntrega, ubicacionActual, tenant, driver);
+    public PedidoParticular(String contenido, Vendedor vendedor, Ubicacion ubicacionEntrega, Ubicacion ubicacionActual, Tenant tenant, String compradorName) {
+        super(contenido, vendedor, ubicacionEntrega, ubicacionActual, tenant, compradorName);
     }
 
     public PedidoParticular() {

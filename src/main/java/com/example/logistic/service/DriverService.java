@@ -2,7 +2,6 @@ package com.example.logistic.service;
 
 import com.example.logistic.mapper.DriverMapper;
 import com.example.logistic.model.roles.Driver;
-import com.example.logistic.model.ruta.Ruta;
 import com.example.logistic.repository.DriverRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ public class DriverService {
     @Autowired
     private DriverMapper driverMapper;
 
-    public Driver getDriverById(Integer id) {
+    public Driver getDriverById(Long id) {
         Driver driver = driverRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Driver no encontrado"));
         return driver;
     }

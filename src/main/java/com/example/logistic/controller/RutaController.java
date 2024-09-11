@@ -6,7 +6,6 @@ import com.example.logistic.mapper.RutaMapper;
 import com.example.logistic.model.dtos.DriverDTO;
 import com.example.logistic.model.dtos.PedidoDTO;
 import com.example.logistic.model.dtos.RutaDTO;
-import com.example.logistic.model.dtos.ViajeDTO;
 import com.example.logistic.model.roles.Driver;
 import com.example.logistic.model.roles.Tenant;
 import com.example.logistic.model.ruta.Ruta;

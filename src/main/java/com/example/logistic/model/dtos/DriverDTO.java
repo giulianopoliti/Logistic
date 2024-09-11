@@ -7,9 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DriverDTO extends PersonaDTO{
-    private Integer vehiculoId;
+    private Long vehiculoId;
 
-    public DriverDTO(Integer id, String nombre, String apellido, String username, Integer tenantId, Integer vehiculoId) {
+    public DriverDTO(Long id, String nombre, String apellido, String username, Long tenantId, Long vehiculoId) {
         super(id, nombre, apellido, username, tenantId);
         this.vehiculoId = vehiculoId;
     }

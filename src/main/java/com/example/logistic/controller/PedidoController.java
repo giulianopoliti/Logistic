@@ -42,7 +42,7 @@ public class PedidoController {
     private LocalService localService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<PedidoDTO> getPedidoDTO(@PathVariable Integer id) {
+    public ResponseEntity<PedidoDTO> getPedidoDTO(@PathVariable Long id) {
         return ResponseEntity.ok(pedidoMapper.toDTO(pedidoService.getPedidoById(id)));
     }
 
@@ -54,30 +54,27 @@ public class PedidoController {
     public ResponseEntity<PedidoDTO> cargarPaqueteParticular(String contenido,
                                                            VendedorDTO vendedorDTO,
                                                            Ubicacion ubicacionEntrega,
-                                                           Local local) {
-        Pedido pedido = new PedidoParticular();
+                                                           Local local,
+                                                             String compradorName) {
 
-        pedidoService.save(pedido);
-        return ResponseEntity.ok(pedidoMapper.toDTO(pedido));
+        PedidoDTO pedidoDTO = pedidoService.cargarPedidoParticular(contenido, vendedorDTO, ubicacionEntrega, local, compradorName);
+        return ResponseEntity.ok(pedidoDTO);
     }
-    public ResponseEntity<PedidoDTO> cargarPaqueteML (String contenido,
+    public ResponseEntity<PedidoDTO> cargarPedidoMeli (String contenido,
                                                        VendedorDTO vendedorDTO,
                                                        Ubicacion ubicacionEntrega,
-                                                       Local local) {
-        Pedido pedido = new PedidoParticular();
-        pedido.setContenido(contenido);
-        Vendedor vendedor = vendedorService.findById(vendedorDTO.getId());
-        pedido.setVendedor(vendedor);
-        pedidoService.save(pedido);
-        return ResponseEntity.ok(pedidoMapper.toDTO(pedido));
-    } // completar func
+                                                       Local local,
+                                                      String orderId,
+                                                      String sellerId,
+                                                      String compradorName) {
+        PedidoDTO pedidoDTO = pedidoService.cargarPedidoMeli(contenido, vendedorDTO, ubicacionEntrega, local, orderId, sellerId, compradorName);
+        return ResponseEntity.ok(pedidoDTO);
+    }
 
     // Driver marca cuando entrega un paquete
     public ResponseEntity<PedidoDTO> marcarPaqueteEntregado (@RequestParam PedidoDTO pedidoDTO) {
-        Pedido pedido = pedidoMapper.toEntity(pedidoDTO);
-        pedido.marcarPaqueteEntregado();
-        pedidoService.save(pedido);
-        return ResponseEntity.ok(pedidoMapper.toDTO(pedido));
+        PedidoDTO pedido = pedidoService.marcarPaqueteEntregado(pedidoDTO);
+        return ResponseEntity.ok(pedido);
     }
 
     // El driver puede marcar cuando no llega a entregar un paquete
@@ -85,9 +82,7 @@ public class PedidoController {
     public ResponseEntity<List<PedidoDTO>> getPaquetesCliente (@RequestBody VendedorDTO vendedorDTO,
                                                                 @RequestParam int page,
                                                                 @RequestParam int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        List<Pedido> paquetes = pedidoService.findPedidosByDriverId(vendedorDTO.getId());
-        List<PedidoDTO> paqueteDTOS = paquetes.stream().map(pedidoMapper::toDTO).collect(Collectors.toList());
+        List<PedidoDTO> pedidoDTOS = pedidoService.findPedidosByVendedor(vendedorDTO.getId(), PageRequest.of(page, size)).stream().map(pedidoMapper::toDTO).collect(Collectors.toList());
         return ResponseEntity.ok(paqueteDTOS);
     }
     public ResponseEntity<List<PedidoDTO>> getPaquetesByDriver (DriverDTO driverDTO) {

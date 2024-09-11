@@ -19,8 +19,8 @@ public class PedidoMeli extends Pedido{
     private String orderId; // ID pedido mercado libre
     private String sellerId; // ID vendedor MELI
 
-    public PedidoMeli(String contenido, Vendedor vendedor, Ubicacion ubicacionEntrega, Ubicacion ubicacionActual, Tenant tenant, String orderId, String sellerId, Driver driver, String compradorName) {
-        super(contenido, vendedor, ubicacionEntrega, ubicacionActual, tenant, driver, compradorName);
+    public PedidoMeli(String contenido, Vendedor vendedor, Ubicacion ubicacionEntrega, Ubicacion ubicacionActual, Tenant tenant, String orderId, String sellerId, String compradorName) {
+        super(contenido, vendedor, ubicacionEntrega, ubicacionActual, tenant, compradorName);
         this.orderId = orderId;
         this.sellerId = sellerId;
     }

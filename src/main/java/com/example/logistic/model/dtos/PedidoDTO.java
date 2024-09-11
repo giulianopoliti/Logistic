@@ -9,13 +9,17 @@ import java.util.Date;
 @Getter
 @Setter
 public class PedidoDTO {
-    private Integer id;
+    private Long id;
     private String contenido;
-    private Integer clienteId;
-    private Date date;
+    private Long vendedorId;
+    private Date fechaCreacion;
     private EstadoPedido estadoPedido;
-    private Ubicacion ubicacionActual;
     private Ubicacion ubicacionEntrega;
-    private Integer localId;
+    private Ubicacion ubicacionActual;
+    private Long tenantId;
+    private Long rutaId;
+    private Long driverId;
+    private String compradorName;
+    private String observacion;
     private TipoPedido tipoPedido;
 }

@@ -18,10 +18,10 @@ public class Driver extends Usuario {
     @JoinColumn(name = "id_vehiculo")
     private Vehiculo vehiculo;
 
-    @OneToMany(mappedBy = "driver_id", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY)
     private List<Ruta> rutas;
 
-    @OneToMany(mappedBy = "driver_id", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY)
     private List<Pedido> pedidos;
 
     @OneToOne(cascade = CascadeType.ALL)

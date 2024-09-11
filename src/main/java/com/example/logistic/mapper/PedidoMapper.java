@@ -1,20 +1,32 @@
 package com.example.logistic.mapper;
 
 import com.example.logistic.model.dtos.PedidoDTO;
+import com.example.logistic.model.dtos.TipoPedido;
 import com.example.logistic.model.ruta.paquete.Pedido;
-import org.mapstruct.Mapper;
+import com.example.logistic.model.ruta.paquete.PedidoParticular;
+import org.springframework.stereotype.Component;
 
-import org.mapstruct.Mapping;
+@Component
+public class PedidoMapper {
+    public PedidoDTO toDTO (Pedido pedido) {
+        PedidoDTO pedidoDTO = new PedidoDTO();
+        pedidoDTO.setId(pedidoDTO.getId());
+        pedidoDTO.setContenido(pedido.getContenido());
+        pedidoDTO.setVendedorId(pedido.getVendedor().getId());
+        pedidoDTO.setFechaCreacion(pedido.getFechaCreacion());
+        pedidoDTO.setUbicacionActual(pedido.getUbicacionActual());
+        pedidoDTO.setUbicacionEntrega(pedido.getUbicacionEntrega());
+        pedidoDTO.setTenantId(pedido.getTenant().getId());
+        pedidoDTO.setRutaId(pedido.getRuta().getId());
+        pedidoDTO.setDriverId(pedido.getDriver().getId());
+        pedidoDTO.setCompradorName(pedido.getCompradorName());
+        pedidoDTO.setObservacion(pedido.getObservacion());
+        if (pedido.getClass() == PedidoParticular.class) {
+            pedidoDTO.setTipoPedido(TipoPedido.PARTICULAR);
+        } else {
+            pedidoDTO.setTipoPedido(TipoPedido.MELI);
+        }
 
-@Mapper(componentModel = "spring")
-public interface PedidoMapper {
-
-    // Mapea de Paquete a PaqueteDTO
-    @Mapping(source = "cliente.id", target = "clienteId")
-    PedidoDTO toDTO(Pedido pedido);
-
-    // Mapea de PaqueteDTO a Paquete
-    @Mapping(source = "clienteId", target = "cliente.id")
-    Pedido toEntity(PedidoDTO pedidoDTO);
+        return pedidoDTO;
+    }
 }
-

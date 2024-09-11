@@ -33,8 +33,17 @@ public abstract class Pedido {
     @Enumerated(EnumType.STRING)
     private EstadoPedido estadoPedido;
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "latitud", column = @Column(name = "ubicacion_entrega_latitud")),
+            @AttributeOverride(name = "longitud", column = @Column(name = "ubicacion_entrega_longitud"))
+    })
     private Ubicacion ubicacionEntrega;
+
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "latitud", column = @Column(name = "ubicacion_actual_latitud")),
+            @AttributeOverride(name = "longitud", column = @Column(name = "ubicacion_actual_longitud"))
+    })
     private Ubicacion ubicacionActual;
     @ManyToOne
     @JoinColumn(name = "tenant_id")
@@ -53,14 +62,13 @@ public abstract class Pedido {
         this.fechaCreacion = new Date();
     }
 
-    public Pedido(String contenido, Vendedor vendedor, Ubicacion ubicacionEntrega, Ubicacion ubicacionActual, Tenant tenant, Driver driver, String compradorName) {
+    public Pedido(String contenido, Vendedor vendedor, Ubicacion ubicacionEntrega, Ubicacion ubicacionActual, Tenant tenant,String compradorName) {
         this();
         this.contenido = contenido;
         this.vendedor = vendedor;
         this.ubicacionEntrega = ubicacionEntrega;
         this.ubicacionActual = ubicacionActual;
         this.tenant = tenant;
-        this.driver = driver;
         this.compradorName = compradorName;
     }
 

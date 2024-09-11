@@ -7,7 +7,6 @@ import lombok.Setter;
 import java.util.Date;
 
 @Entity
-@MappedSuperclass
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo_integracion", discriminatorType = DiscriminatorType.STRING)
 @Getter

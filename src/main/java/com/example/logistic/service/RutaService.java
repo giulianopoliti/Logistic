@@ -15,7 +15,7 @@ public class RutaService {
     @Autowired
     private RutaRepository rutaRepository;
 
-    public Ruta getRutaById(Integer id) {
+    public Ruta getRutaById(Long id) {
         return rutaRepository.findById(id).orElseThrow(() -> new RuntimeException("Ruta no encontrada"));
     }
 
@@ -23,15 +23,15 @@ public class RutaService {
         return rutaRepository.save(ruta);
     }
 
-    public Ruta actualizarViajes(Integer rutaId, List<Pedido> pedidos) {
+    public Ruta actualizarViajes(Long rutaId, List<Pedido> pedidos) {
         Ruta ruta = getRutaById(rutaId);
         ruta.setPedidos(pedidos);
         return rutaRepository.save(ruta);
     }
-    public Ruta findByDriverId(Integer driverId) {
+    public Ruta findByDriverId(Long driverId) {
         return rutaRepository.findByDriverId(driverId, new Date()); // esto te trae la primera ruta que encuentra del driver
     }
-    public List<Ruta> findByDay (Date date, Integer tenantId) {
+    public List<Ruta> findByDay (Date date, Long tenantId) {
         return rutaRepository.findByDay(date, tenantId);
     }
 

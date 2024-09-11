@@ -1,9 +1,13 @@
 package com.example.logistic.model.roles;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Date;
+@Getter
+@Setter
 @Entity
 @Table(name = "usuarios")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -19,6 +23,7 @@ public abstract class Usuario {
     @JoinColumn(name = "tenant_id")
     private Tenant tenant;
     private String email;
+    private String phone;
     private String username;
     @Column(name = "password_hash")
     private String passwordHash; // Renombrado para reflejar que almacena el hash de la contraseña

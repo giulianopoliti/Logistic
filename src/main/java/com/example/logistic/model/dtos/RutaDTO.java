@@ -9,9 +9,9 @@ import java.util.List;
 @Getter
 @Setter
 public class RutaDTO {
-    private Integer id;
+    private Long id;
     private Date date;
     private Ubicacion ubicacionDeposito;
-    private Integer driverId;
+    private Long driverId;
     private List<PedidoDTO> pedidoDTOS;
 }

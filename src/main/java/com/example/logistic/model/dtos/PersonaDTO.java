@@ -6,13 +6,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public abstract class PersonaDTO {
-    private Integer id;
+    private Long id;
     private String name;
     private String lastName;
     private String username;
-    private Integer tenantId;
+    private Long tenantId;
 
-    public PersonaDTO(Integer id, String name, String lastName, String username, Integer tenantId) {
+    public PersonaDTO(Long id, String name, String lastName, String username, Long tenantId) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;

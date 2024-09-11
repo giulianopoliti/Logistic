@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface VendedorRepository extends JpaRepository<Vendedor, Integer>{
+public interface VendedorRepository extends JpaRepository<Vendedor, Long>{
 
     // Consulta personalizada utilizando JPQL
-    @Query("SELECT c FROM Vendedor c WHERE c.tenant = :tenant")
-    List<Vendedor> findClientesByTenant(Tenant tenant);
+    @Query("SELECT c FROM Vendedor c WHERE c.tenant.id = :tenantId")
+    List<Vendedor> findVendedoresByTenant(Long tenantId);
 }

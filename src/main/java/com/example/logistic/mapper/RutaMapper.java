@@ -7,7 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = PedidoMapper.class)
 public interface RutaMapper {
     RutaMapper INSTANCE = Mappers.getMapper(RutaMapper.class);
 
