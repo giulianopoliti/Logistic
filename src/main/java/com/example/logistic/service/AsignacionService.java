@@ -1,13 +1,10 @@
 package com.example.logistic.service;
 
 import com.example.logistic.mapper.DriverMapper;
-import com.example.logistic.mapper.PaqueteMapper;
+import com.example.logistic.mapper.PedidoMapper;
 import com.example.logistic.model.dtos.DriverDTO;
-import com.example.logistic.model.dtos.PaqueteDTO;
 import com.example.logistic.model.dtos.PedidoDTO;
-import com.example.logistic.model.paquete.Paquete;
 import com.example.logistic.model.roles.Driver;
-import com.example.logistic.model.ruta.Viaje;
 import com.example.logistic.model.ruta.paquete.Pedido;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +16,7 @@ public class AsignacionService {
     private final DriverService driverService;
     private final RutaService rutaService;
     @Autowired
-    private PaqueteMapper paqueteMapper;
+    private PedidoMapper pedidoMapper;
     @Autowired
     private DriverMapper driverMapper;
 
@@ -34,7 +31,6 @@ public class AsignacionService {
 
     @Transactional
     public void asignarPaqueteADriver(PedidoDTO pedidoDTO, DriverDTO driverDTO) {
-        Driver driver = driverService.getDriverById(driverMapper.toEntity(driverDTO).getId());
-        Pedido pedido = pedidoService.getPaqueteById(paqueteMapper.toEntity(paqueteDTO).getId());
+
     }
 }

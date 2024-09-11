@@ -34,8 +34,7 @@ public class DriverController {
                 tenant,
                 (String)driverData.get("email"),
                 (String)driverData.get("username"),
-                (String)driverData.get("password"),
-                (Role)driverData.get("role"));
+                (String)driverData.get("password"));
         return ResponseEntity.ok(driverMapper.toDTO(driver));
     }
     @PutMapping("/agregarVehiculo")

@@ -1,8 +1,6 @@
 package com.example.logistic.mapper;
 
-import com.example.logistic.model.dtos.PaqueteDTO;
 import com.example.logistic.model.dtos.PedidoDTO;
-import com.example.logistic.model.paquete.Paquete;
 import com.example.logistic.model.ruta.paquete.Pedido;
 import org.mapstruct.Mapper;
 

@@ -13,6 +13,7 @@ import com.example.logistic.model.ruta.paquete.EstadoPaquete;
 import com.example.logistic.model.roles.Local;
 import com.example.logistic.model.ruta.Ubicacion;
 import com.example.logistic.model.ruta.paquete.Pedido;
+import com.example.logistic.model.ruta.paquete.PedidoMeli;
 import com.example.logistic.model.ruta.paquete.PedidoParticular;
 import com.example.logistic.service.LocalService;
 import com.example.logistic.service.PedidoService;
@@ -43,13 +44,13 @@ public class PedidoController {
     private LocalService localService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<PedidoDTO> getPaqueteDTO(@PathVariable Integer id) {
-        return ResponseEntity.ok(pedidoMapper.toDTO(pedidoService.getPaqueteById(id)));
+    public ResponseEntity<PedidoDTO> getPedidoDTO(@PathVariable Integer id) {
+        return ResponseEntity.ok(pedidoMapper.toDTO(pedidoService.getPedidoById(id)));
     }
 
     // on click en paquete, que te muestre todo
     public ResponseEntity<Pedido> getPaquete (@RequestParam PedidoDTO pedidoDTO) {
-        Pedido pedido = pedidoService.getPaqueteById(pedidoDTO.getId());
+        Pedido pedido = pedidoService.getPedidoById(pedidoDTO.getId());
         return ResponseEntity.ok(pedido);
     }
     public ResponseEntity<PedidoDTO> cargarPaqueteParticular(String contenido,
@@ -65,10 +66,13 @@ public class PedidoController {
                                                        VendedorDTO vendedorDTO,
                                                        Ubicacion ubicacionEntrega,
                                                        Local local) {
-        Pedido pedido = new PedidoParticular(contenido, clienteService.findById(clienteDTO.getId()), TipoPaquete.MercadoLibre, ubicacionEntrega, local);
+        Pedido pedido = new PedidoParticular();
+        pedido.setContenido(contenido);
+        Vendedor vendedor = vendedorService.findById(vendedorDTO.getId());
+        pedido.setVendedor(vendedor);
         pedidoService.save(pedido);
         return ResponseEntity.ok(pedidoMapper.toDTO(pedido));
-    }
+    } // completar func
 
     // Driver marca cuando entrega un paquete
     public ResponseEntity<PedidoDTO> marcarPaqueteEntregado (@RequestParam PedidoDTO pedidoDTO) {
@@ -84,7 +88,7 @@ public class PedidoController {
                                                                 @RequestParam int page,
                                                                 @RequestParam int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Pedido> paquetes = pedidoService.findPedidosByDriverId(vendedorDTO.getId(), pageable);
+        List<Pedido> paquetes = pedidoService.findPedidosByDriverId(vendedorDTO.getId());
         List<PedidoDTO> paqueteDTOS = paquetes.stream().map(pedidoMapper::toDTO).collect(Collectors.toList());
         return ResponseEntity.ok(paqueteDTOS);
     }
@@ -103,37 +107,29 @@ public class PedidoController {
         List<Pedido> paquetes = new ArrayList<>();
         for (int i = 0; i < pedidoDTOS.size(); i++) {
             Vendedor vendedor = vendedorService.findById(pedidoDTOS.get(i).getClienteId());
-            Pedido pedido = new PedidoParticular(pedidoDTOS.get(i).getContenido(),
-                    vendedor,
-                    pedidoDTOS.get(i).getUbicacionEntrega(),
-                    localService.getById(pedidoDTOS.get(i).getLocalId()));
+            Pedido pedido = new PedidoParticular();
             paquetes.add(pedido);
             pedidoService.save(pedido);
         }
-        return ResponseEntity.ok(paqueteDTOS);
+        return ResponseEntity.ok(pedidoDTOS);
     }
 
-    public ResponseEntity<List<PaqueteDTO>> cargarPaquetesMELI(@RequestBody List<PaqueteDTO> paqueteDTOS) {
-        List<Paquete> paquetes = new ArrayList<>();
-        for (int i = 0; i < paqueteDTOS.size(); i++) {
-            Cliente cliente = clienteService.findById(paqueteDTOS.get(i).getClienteId());
-            Paquete paquete = new Paquete(paqueteDTOS.get(i).getContenido(),
-                    cliente,
-                    TipoPaquete.MercadoLibre,
-                    paqueteDTOS.get(i).getUbicacionEntrega(),
-                    localService.getById(paqueteDTOS.get(i).getLocalId()));
-            paquetes.add(paquete);
-            paqueteService.save(paquete);
+    public ResponseEntity<List<PedidoDTO>> cargarPaquetesMELI(@RequestBody List<PedidoDTO> pedidoDTOS) {
+        List<Pedido> paquetes = new ArrayList<>();
+        for (int i = 0; i < pedidoDTOS.size(); i++) {
+            Vendedor vendedor = vendedorService.findById(pedidoDTOS.get(i).getClienteId());
+            Pedido pedido = new PedidoMeli();
+            pedidoService.save(pedido);
         }
-        return ResponseEntity.ok(paqueteDTOS);
+        return ResponseEntity.ok(pedidoDTOS);
     }
     // cuando el driver escanea el qr de flex, cambia el estado a que lo tiene el driver,
     // ya esta en el sistema
-    public ResponseEntity<PaqueteDTO> marcarPaqueteDespachado (PaqueteDTO paqueteDTO) {
-        Paquete paquete = paqueteService.getPaqueteById(paqueteDTO.getId());
-        paquete.setEstadoPaquete(EstadoPaquete.Despachado);
-        paqueteService.save(paquete);
+    public ResponseEntity<PedidoDTO> marcarPaqueteDespachado (PedidoDTO pedidoDTO) {
+        Pedido pedido = pedidoService.getPedidoById(pedidoDTO.getId());
+        pedido.setEstadoPaquete(EstadoPaquete.Despachado);
+        pedidoService.save(pedido);
         // ver si crear viaje aca o no
-        return ResponseEntity.ok(paqueteMapper.toDTO(paquete));
+        return ResponseEntity.ok(pedidoMapper.toDTO(pedido));
     }
 }

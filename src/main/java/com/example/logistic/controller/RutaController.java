@@ -3,8 +3,8 @@ package com.example.logistic.controller;
 import com.example.logistic.mapper.DriverMapper;
 import com.example.logistic.mapper.PedidoMapper;
 import com.example.logistic.mapper.RutaMapper;
-import com.example.logistic.mapper.ViajeMapper;
 import com.example.logistic.model.dtos.DriverDTO;
+import com.example.logistic.model.dtos.PedidoDTO;
 import com.example.logistic.model.dtos.RutaDTO;
 import com.example.logistic.model.dtos.ViajeDTO;
 import com.example.logistic.model.roles.Driver;
@@ -14,7 +14,6 @@ import com.example.logistic.model.ruta.paquete.Pedido;
 import com.example.logistic.service.DriverService;
 import com.example.logistic.service.PedidoService;
 import com.example.logistic.service.RutaService;
-import com.example.logistic.service.ViajeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,11 +27,6 @@ import java.util.stream.Collectors;
 public class RutaController {
     @Autowired
     private RutaService rutaService;
-
-    @Autowired
-    private ViajeService viajeService;
-    @Autowired
-    private ViajeMapper viajeMapper;
     @Autowired
     private PedidoMapper pedidoMapper;
     @Autowired
@@ -54,7 +48,7 @@ public class RutaController {
     public ResponseEntity<RutaDTO> crearRuta(@RequestParam List<PedidoDTO> pedidoDTOS,
                                           DriverDTO driverDTO) {
         List<Pedido> paquetes = pedidoDTOS.stream()
-                .map(paqueteDTO -> pedidoService.getPaqueteById(paqueteDTO.getId()))
+                .map(paqueteDTO -> pedidoService.getPedidoById(paqueteDTO.getId()))
                 .collect(Collectors.toList());
         Driver driver = driverService.getDriverById(driverDTO.getId());
         Ruta ruta = new Ruta(driver, paquetes);
@@ -63,16 +57,15 @@ public class RutaController {
     }
 
     @PutMapping("/{id}/viajes")
-    public ResponseEntity<Ruta> actualizarViajes(@PathVariable Integer id, @RequestBody List<Viaje> viajes) {
+    public ResponseEntity<Ruta> actualizarPedidos(@PathVariable Integer id, @RequestBody List<Pedido> pedidos) {
         // Implementación
         return null;
-
     }
 
     @PutMapping("/{id}/")
-    public ResponseEntity<Ruta> addViaje (@RequestParam DriverDTO driverDTO, PaqueteDTO paqueteDTO) {
+    public ResponseEntity<Ruta> addPedidoCreado (@RequestParam DriverDTO driverDTO, PedidoDTO pedidoDTO) {
         Ruta ruta = rutaService.findByDriverId(driverDTO.getId());
-        ruta.addPedido(driverMapper.toEntity(driverDTO), pe.toEntity(paqueteDTO));
+        Pedido pedido = pedidoService.getPedidoById(pedidoDTO.getId());
         return ResponseEntity.ok(ruta);
     }
     public ResponseEntity<Ruta> finalizarRuta (DriverDTO driverDTO) {

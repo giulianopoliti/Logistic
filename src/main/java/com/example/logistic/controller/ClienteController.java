@@ -37,7 +37,7 @@ public class ClienteController {
                 (String)clienteData.get("username"),
                 (String)clienteData.get("password")
                 );
-        vendedorService.save(cliente);
+        vendedorService.save(vendedor);
         return ResponseEntity.ok(vendedorMapper.toDTO(vendedor));
     }
     // Habria que crear para clientes sin acceso a la app. Y que pueda migrar los paquetes el administrador

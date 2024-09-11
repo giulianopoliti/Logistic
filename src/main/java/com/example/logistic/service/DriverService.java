@@ -1,7 +1,6 @@
 package com.example.logistic.service;
 
 import com.example.logistic.mapper.DriverMapper;
-import com.example.logistic.model.paquete.Paquete;
 import com.example.logistic.model.roles.Driver;
 import com.example.logistic.model.ruta.Ruta;
 import com.example.logistic.repository.DriverRepository;
@@ -21,9 +20,7 @@ public class DriverService {
         return driver;
     }
 
-    public Ruta getRutaDiaria(Integer driverId) {
-        Driver driver = getDriverById(driverId);
-    }
+
     public void save (Driver driver) {
         if (driver == null) {
             throw new RuntimeException("Error al recibir el driver, es nulo");

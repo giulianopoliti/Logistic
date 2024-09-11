@@ -2,7 +2,7 @@ package com.example.logistic.service;
 
 import com.example.logistic.model.roles.Driver;
 import com.example.logistic.model.ruta.Ruta;
-import com.example.logistic.model.ruta.Viaje;
+import com.example.logistic.model.ruta.paquete.Pedido;
 import com.example.logistic.repository.RutaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,9 +23,9 @@ public class RutaService {
         return rutaRepository.save(ruta);
     }
 
-    public Ruta actualizarViajes(Integer rutaId, List<Viaje> viajes) {
+    public Ruta actualizarViajes(Integer rutaId, List<Pedido> pedidos) {
         Ruta ruta = getRutaById(rutaId);
-        ruta.setViajes(viajes);
+        ruta.setPedidos(pedidos);
         return rutaRepository.save(ruta);
     }
     public Ruta findByDriverId(Integer driverId) {

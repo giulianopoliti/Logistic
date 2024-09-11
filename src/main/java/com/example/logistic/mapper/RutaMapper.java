@@ -4,15 +4,18 @@ import com.example.logistic.model.dtos.RutaDTO;
 import com.example.logistic.model.ruta.Ruta;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
 
-@Mapper(componentModel = "spring", uses = {ViajeMapper.class})  // ViajeMapper se usa para mapear Viaje a ViajeDTO
+@Mapper(componentModel = "spring")
 public interface RutaMapper {
-    // Mapea de Ruta a RutaDTO
+    RutaMapper INSTANCE = Mappers.getMapper(RutaMapper.class);
+
     @Mapping(source = "driver.id", target = "driverId")
+    @Mapping(source = "pedidos", target = "pedidoDTOS")
     RutaDTO toDTO(Ruta ruta);
 
-    // Mapea de RutaDTO a Ruta
     @Mapping(source = "driverId", target = "driver.id")
+    @Mapping(source = "pedidoDTOS", target = "pedidos")
     Ruta toEntity(RutaDTO rutaDTO);
 }
