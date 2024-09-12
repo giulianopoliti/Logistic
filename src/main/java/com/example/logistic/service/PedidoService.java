@@ -12,6 +12,8 @@ import com.example.logistic.model.ruta.paquete.PedidoMeli;
 import com.example.logistic.model.ruta.paquete.PedidoParticular;
 import com.example.logistic.repository.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -77,9 +79,29 @@ public class PedidoService {
         pedido.setEstadoPedido(EstadoPedido.ENTREGADO);
         return pedidoMapper.toDTO(save(pedido));
     }
-    public List<PedidoDTO> findPedidosByVendedor(VendedorDTO vendedorDTO) {
+    public Page<PedidoDTO> findPedidosByVendedor(VendedorDTO vendedorDTO, Pageable pageable) {
         Vendedor vendedor = vendedorService.findById(vendedorDTO.getId());
-        List<PedidoDTO> pedidoDTOS = pedidoRepository.findPedidosByVendedor(vendedor);
+
+        // Usar la paginación en la consulta
+        Page<Pedido> pedidosPage = pedidoRepository.findPedidosByVendedorId(vendedor.getId(), pageable);
+
+        // Mapear la entidad Pedido a PedidoDTO
+        return pedidosPage.map(pedido -> pedidoMapper.toDTO(pedido));
+    }
+    public List<PedidoDTO> cargarPedidosParticular (List<PedidoDTO> pedidoDTOS) {
+        for (int i = 0; i < pedidoDTOS.size(); i++) {
+            Vendedor vendedor = vendedorService.findById(pedidoDTOS.get(i).getVendedorId());
+            Pedido pedido = new PedidoParticular(pedidoDTOS.get(i).getContenido(), vendedor, pedidoDTOS.get(i).getUbicacionEntrega(), pedidoDTOS.get(i).getUbicacionActual(), vendedor.getTenant(), pedidoDTOS.get(i).getCompradorName());
+            save(pedido);
+        }
+        return pedidoDTOS;
+    }
+    public List<PedidoDTO> cargarPedidosMeli (List<PedidoDTO> pedidoDTOS) {
+        for (int i = 0; i < pedidoDTOS.size(); i++) {
+            Vendedor vendedor = vendedorService.findById(pedidoDTOS.get(i).getVendedorId());
+            // logica para entrar datos de meli
+        }
+        return pedidoDTOS;
     }
 }
 

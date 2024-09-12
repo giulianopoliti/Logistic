@@ -2,20 +2,27 @@ package com.example.logistic.mapper;
 
 import com.example.logistic.model.dtos.RutaDTO;
 import com.example.logistic.model.ruta.Ruta;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
+public class RutaMapper {
+    @Autowired
+    private PedidoMapper pedidoMapper;
+    public RutaDTO toDTO (Ruta ruta) {
+        RutaDTO rutaDTO = new RutaDTO();
+        rutaDTO.setDriverId(ruta.getDriver().getId());
+        for (int i = 0; i < ruta.getPedidos().size(); i++) {
+            rutaDTO.getPedidoDTOS().add(pedidoMapper.toDTO(ruta.getPedidos().get(i)));
+        }
+        return rutaDTO;
+    }
+    public Ruta toEntity (RutaDTO rutaDTO) {
+        Ruta ruta = new Ruta();
+        for (int i = 0; i < rutaDTO.getPedidoDTOS().size(); i++) {
+            return null;
+        }
+        return ruta;
+    }
 
-@Mapper(componentModel = "spring", uses = PedidoMapper.class)
-public interface RutaMapper {
-    RutaMapper INSTANCE = Mappers.getMapper(RutaMapper.class);
-
-    @Mapping(source = "driver.id", target = "driverId")
-    @Mapping(source = "pedidos", target = "pedidoDTOS")
-    RutaDTO toDTO(Ruta ruta);
-
-    @Mapping(source = "driverId", target = "driver.id")
-    @Mapping(source = "pedidoDTOS", target = "pedidos")
-    Ruta toEntity(RutaDTO rutaDTO);
 }

@@ -14,4 +14,10 @@ public class RutaDTO {
     private Ubicacion ubicacionDeposito;
     private Long driverId;
     private List<PedidoDTO> pedidoDTOS;
+    public void addPedidoDTO (PedidoDTO pedidoDTO) {
+        this.pedidoDTOS.add(pedidoDTO);
+    }
+    public void removePedidoDTO (PedidoDTO pedidoDTO) {
+        this.pedidoDTOS.remove(pedidoDTO);
+    }
 }

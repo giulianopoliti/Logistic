@@ -16,6 +16,7 @@ import java.util.List;
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     @Query("SELECT p FROM Pedido p WHERE p.vendedor.id = :vendedorId")
     Page<Pedido> findPedidosByVendedorId(Long vendedorId, Pageable pageable);
-
+    @Query("SELECT p FROM Pedido p WHERE p.vendedor.tenant = :tenant")
+    Page<Pedido> findPedidosByTenant(Tenant tenant, Pageable pageable);
 
 }

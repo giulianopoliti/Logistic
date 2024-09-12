@@ -18,6 +18,7 @@ import com.example.logistic.service.LocalService;
 import com.example.logistic.service.PedidoService;
 import com.example.logistic.service.VendedorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -79,11 +80,11 @@ public class PedidoController {
 
     // El driver puede marcar cuando no llega a entregar un paquete
 
-    public ResponseEntity<List<PedidoDTO>> getPaquetesCliente (@RequestBody VendedorDTO vendedorDTO,
-                                                                @RequestParam int page,
-                                                                @RequestParam int size) {
-        List<PedidoDTO> pedidoDTOS = pedidoService.findPedidosByVendedor(vendedorDTO.getId(), PageRequest.of(page, size)).stream().map(pedidoMapper::toDTO).collect(Collectors.toList());
-        return ResponseEntity.ok(paqueteDTOS);
+    public ResponseEntity<Page<PedidoDTO>> getPaquetesVendedor (@RequestBody VendedorDTO vendedorDTO,
+                                                               @RequestParam int page,
+                                                               @RequestParam int size) {
+        Page<PedidoDTO> pedidoDTOS = pedidoService.findPedidosByVendedor(vendedorDTO, PageRequest.of(page, size));
+        return ResponseEntity.ok(pedidoDTOS);
     }
     public ResponseEntity<List<PedidoDTO>> getPaquetesByDriver (DriverDTO driverDTO) {
         if (driverDTO == null) {
@@ -97,23 +98,12 @@ public class PedidoController {
     // reveer esta func, cargar muchos paquetes de manera particular, puede ser excel y guarda en db,
     // hay que ver que info nos mandamos desde el front
     public ResponseEntity<List<PedidoDTO>> cargarPaquetesParticular(@RequestBody List<PedidoDTO> pedidoDTOS) {
-        List<Pedido> paquetes = new ArrayList<>();
-        for (int i = 0; i < pedidoDTOS.size(); i++) {
-            Vendedor vendedor = vendedorService.findById(pedidoDTOS.get(i).getClienteId());
-            Pedido pedido = new PedidoParticular();
-            paquetes.add(pedido);
-            pedidoService.save(pedido);
-        }
+        pedidoService.cargarPedidosParticular(pedidoDTOS);
         return ResponseEntity.ok(pedidoDTOS);
     }
 
     public ResponseEntity<List<PedidoDTO>> cargarPaquetesMELI(@RequestBody List<PedidoDTO> pedidoDTOS) {
-        List<Pedido> paquetes = new ArrayList<>();
-        for (int i = 0; i < pedidoDTOS.size(); i++) {
-            Vendedor vendedor = vendedorService.findById(pedidoDTOS.get(i).getClienteId());
-            Pedido pedido = new PedidoMeli();
-            pedidoService.save(pedido);
-        }
+        pedidoService.cargarPedidosMeli(pedidoDTOS); // falta terminarlo
         return ResponseEntity.ok(pedidoDTOS);
     }
     // cuando el driver escanea el qr de flex, cambia el estado a que lo tiene el driver,
