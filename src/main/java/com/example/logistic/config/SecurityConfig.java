@@ -26,7 +26,6 @@ public class SecurityConfig {
                 )
                 .formLogin(withDefaults())
                 .csrf(csrf -> csrf.disable()); // Considera habilitar CSRF para producción
-
         return http.build();
     }
 

@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/paquetes")
+@RequestMapping("/api/pedidos")
 public class PedidoController {
     @Autowired
     private PedidoService pedidoService;
@@ -47,11 +47,6 @@ public class PedidoController {
         return ResponseEntity.ok(pedidoMapper.toDTO(pedidoService.getPedidoById(id)));
     }
 
-    // on click en paquete, que te muestre todo
-    public ResponseEntity<Pedido> getPaquete (@RequestParam PedidoDTO pedidoDTO) {
-        Pedido pedido = pedidoService.getPedidoById(pedidoDTO.getId());
-        return ResponseEntity.ok(pedido);
-    }
     public ResponseEntity<PedidoDTO> cargarPaqueteParticular(String contenido,
                                                            VendedorDTO vendedorDTO,
                                                            Ubicacion ubicacionEntrega,

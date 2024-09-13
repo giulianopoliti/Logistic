@@ -35,9 +35,9 @@ public class VendedorService {
     public VendedorDTO findByIdAsDTO(Long id) {
         return vendedorMapper.toDTO(findById(id));
     }
-    public List<VendedorDTO> findVendedoresByTenant (TenantDTO tenantDTO) {
-        List<VendedorDTO> vendedorDTOS = vendedorRepository.findVendedoresByTenant(tenantDTO.getId()).stream().map(vendedorMapper::toDTO).collect(Collectors.toList());
-        return vendedorDTOS;
+    public List<Vendedor> findVendedoresByTenant (TenantDTO tenantDTO) {
+        List<Vendedor> vendedor = vendedorRepository.findVendedoresByTenant(tenantDTO.getId());
+        return vendedor;
     }
 
     public Vendedor save(Vendedor vendedor) {
@@ -54,8 +54,8 @@ public class VendedorService {
         pedido.setVendedor(vendedor);
         return pedidoRepository.save(pedido);
     }
-    public VendedorDTO crearVendedorConAcceso(Map<String, Object> clienteData) {
-        // Recupera el Tenant
+    public Vendedor crearVendedorConAcceso(Map<String, Object> clienteData) {
+
         Tenant tenant = tenantService.getById((Integer) clienteData.get("tenantId"));
 
         // Crea la entidad Vendedor
@@ -73,6 +73,6 @@ public class VendedorService {
         vendedorRepository.save(vendedor);
 
         // Convierte la entidad guardada a DTO y la retorna
-        return vendedorMapper.toDTO(vendedor);
+        return vendedor;
     }
 }

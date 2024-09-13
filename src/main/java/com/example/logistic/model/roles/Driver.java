@@ -13,6 +13,7 @@ import java.util.List;
 @Entity
 @Setter
 @Getter
+@DiscriminatorValue("DRIVER")
 public class Driver extends Usuario {
     @OneToOne
     @JoinColumn(name = "id_vehiculo")

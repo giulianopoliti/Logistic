@@ -14,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@DiscriminatorValue("VENDEDOR")
 public class Vendedor extends Usuario {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "vendedor_id")

@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/clientes")
+@RequestMapping("/api/vendedores")
 public class VendedorController {
     @Autowired
     private VendedorService vendedorService;
@@ -28,18 +28,19 @@ public class VendedorController {
 
 
     @PostMapping("/registro")
-    public ResponseEntity<VendedorDTO> crearVendedorConAcceso (@RequestBody Map<String, Object> clienteData) {
+    public ResponseEntity<Vendedor> crearVendedorConAcceso (@RequestBody Map<String, Object> clienteData) {
         // Llama a la capa de servicio para manejar la lógica de creación y conversión
-        VendedorDTO vendedorDTO = vendedorService.crearVendedorConAcceso(clienteData);
-        return ResponseEntity.ok(vendedorDTO);
+        Vendedor vendedor = vendedorService.crearVendedorConAcceso(clienteData);
+        return ResponseEntity.ok(vendedor);
     }
     // Habria que crear para clientes sin acceso a la app. Y que pueda migrar los paquetes el administrador
 
 
     @GetMapping("/{id}")
     public ResponseEntity<List<VendedorDTO>> getVendedoresByTenant(@PathVariable TenantDTO tenantDTO) {
-        List<VendedorDTO> vendedorDTOs = vendedorService.findVendedoresByTenant(tenantDTO);
-        return ResponseEntity.ok(vendedorDTOs);
+        List<Vendedor> vendedor = vendedorService.findVendedoresByTenant(tenantDTO);
+        List<VendedorDTO> vendedorDTOS = vendedor.stream().map(vendedorMapper::toDTO).collect(Collectors.toList());
+        return ResponseEntity.ok(vendedorDTOS);
     }
 
     @PostMapping

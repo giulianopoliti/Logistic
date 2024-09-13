@@ -7,12 +7,14 @@ import com.example.logistic.model.roles.*;
 import com.example.logistic.model.ruta.Ruta;
 import com.example.logistic.service.DriverService;
 import com.example.logistic.service.TenantService;
+import jakarta.persistence.EntityExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -25,31 +27,15 @@ public class DriverController {
     @Autowired
     private TenantService tenantService;
     @PostMapping
-    public ResponseEntity<DriverDTO> crearDriver (@RequestBody Map<String, Object> driverData) {
-        Tenant tenant = tenantService.getById((Integer) driverData.get("tenantId"));
-        // aca deberiamos encriptar la contraseña
-        Driver driver = new Driver((String)driverData.get("name"),
-                (String)driverData.get("lastName"),
-                (Date) driverData.get("dateOfBirth"),
-                tenant,
-                (String)driverData.get("email"),
-                (String)driverData.get("username"),
-                (String)driverData.get("password"));
-        return ResponseEntity.ok(driverMapper.toDTO(driver));
+    public ResponseEntity<DriverDTO> crearDriver(@RequestBody Map<String, Object> driverData) {
+        Driver driver = driverService.crearDriver(driverData);
+        DriverDTO driverDTO = driverMapper.toDTO(driver);
+        return ResponseEntity.status(HttpStatus.CREATED).body(driverDTO);
     }
+
     @PutMapping("/agregarVehiculo")
     public ResponseEntity<DriverDTO> agregarVehiculo(@RequestParam Long driverId, @RequestBody Vehiculo vehiculo) {
-        // Obtener el Driver por su ID
-        Driver driver = driverService.getDriverById(driverId);
-        if (driver == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        // Agregar el vehículo al Driver
-        driver.modificarVehiculo(vehiculo);
-        // Guardar los cambios
-        driverService.save(driver);
-
-        // Devolver la respuesta
+        Driver driver = driverService.modificarVehiculo(driverId, vehiculo);
         return ResponseEntity.ok(driverMapper.toDTO(driver));
     }
 
@@ -58,6 +44,12 @@ public class DriverController {
         Driver driver = driverService.getDriverById(id);
         DriverDTO driverDTO = driverMapper.toDTO(driver);
         return ResponseEntity.ok(driver);
+    }
+    @GetMapping
+    public ResponseEntity<List<DriverDTO>> getDrivers () {
+        List <Driver> drivers = driverService.getDrivers();
+        List<DriverDTO> driverDTOS = drivers.stream().map(driver -> driverMapper.toDTO(driver)).toList();
+        return ResponseEntity.ok(driverDTOS);
     }
 
     @GetMapping("/{id}/ruta-diaria")

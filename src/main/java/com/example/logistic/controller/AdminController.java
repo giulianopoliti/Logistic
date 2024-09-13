@@ -28,7 +28,7 @@ public class AdminController {
     private TenantService tenantService;
     @Autowired
     private UsuarioService usuarioService;
-    @PostMapping
+    @PostMapping("/registro")
     public ResponseEntity<AdminDTO> crearAdmin (@RequestBody Map<String, Object> adminData) {
         Tenant tenant = tenantService.getById((Integer) adminData.get("tenantId"));
         // aca deberiamos encriptar la contraseña
