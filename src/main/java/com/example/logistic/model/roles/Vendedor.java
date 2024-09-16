@@ -6,14 +6,15 @@ import com.example.logistic.model.ruta.paquete.Pedido;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
 @Entity
+@Table(name="usuarios")
 @DiscriminatorValue("VENDEDOR")
 public class Vendedor extends Usuario {
     @OneToMany(fetch = FetchType.LAZY)
@@ -28,8 +29,11 @@ public class Vendedor extends Usuario {
     @JoinColumn(name = "vendedor_id")
     private List<IntegracionMeliVendedor> integracionMeliVendedor;
 
-    public Vendedor(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String username, String password) {
-        super(name, lastName, dateOfBirth, tenant, email, username, password);
+    public Vendedor(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String phone, String emergencyPhone, String username, String cuil, String address, Date createdAt, String profilePictureURL) {
+        super(name, lastName, dateOfBirth, tenant, email, phone, emergencyPhone, username, cuil, address, createdAt, profilePictureURL);
+        this.pedidos = new ArrayList<>();
+        this.locales = new ArrayList<>();
+        this.integracionMeliVendedor = new ArrayList<>();
     }
 
     public Vendedor() {
@@ -53,5 +57,10 @@ public class Vendedor extends Usuario {
     }
     public boolean isIntegrateMeli () {
         return !this.integracionMeliVendedor.isEmpty();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_VENDEDOR"));
     }
 }

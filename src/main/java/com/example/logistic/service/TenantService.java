@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class TenantService {
     @Autowired
     private TenantRepository tenantRepository;
-    public Tenant getById (Integer id) {
+    public Tenant getById (Long id) {
         return tenantRepository.getById(id);
     }
 }

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RestController;
 
 @Repository
-public interface LocalRepository extends JpaRepository<Local, Integer> {
+public interface LocalRepository extends JpaRepository<Local, Long> {
 }

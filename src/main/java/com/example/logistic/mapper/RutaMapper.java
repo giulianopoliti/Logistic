@@ -1,9 +1,13 @@
 package com.example.logistic.mapper;
 
+import com.example.logistic.model.dtos.PedidoDTO;
 import com.example.logistic.model.dtos.RutaDTO;
 import com.example.logistic.model.ruta.Ruta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class RutaMapper {
@@ -11,9 +15,14 @@ public class RutaMapper {
     private PedidoMapper pedidoMapper;
     public RutaDTO toDTO (Ruta ruta) {
         RutaDTO rutaDTO = new RutaDTO();
-        rutaDTO.setDriverId(ruta.getDriver().getId());
+        rutaDTO.setDriverId(ruta.getDriver().getAuthId());
+        rutaDTO.setId(ruta.getId());
+        rutaDTO.setDate(ruta.getDate());
+        rutaDTO.setCompletada(ruta.isCompletada());
         for (int i = 0; i < ruta.getPedidos().size(); i++) {
-            rutaDTO.getPedidoDTOS().add(pedidoMapper.toDTO(ruta.getPedidos().get(i)));
+
+            PedidoDTO pedidoDTO = pedidoMapper.toDTO(ruta.getPedidos().get(i));
+            rutaDTO.addPedidoDTO(pedidoDTO);
         }
         return rutaDTO;
     }

@@ -8,11 +8,7 @@ import lombok.Setter;
 @Setter
 public class DriverDTO extends PersonaDTO{
     private Long vehiculoId;
-
-    public DriverDTO(Long id, String nombre, String apellido, String username, Long tenantId, Long vehiculoId) {
-        super(id, nombre, apellido, username, tenantId);
-        this.vehiculoId = vehiculoId;
-    }
+    private Long rutaDiaria;
 
     // Constructores, getters y setters
 }

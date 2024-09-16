@@ -6,20 +6,23 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.UUID;
+
 @Getter
 @Setter
-public class PedidoDTO {
+public abstract class PedidoDTO {
     private Long id;
     private String contenido;
-    private Long vendedorId;
+    private UUID vendedorId;
     private Date fechaCreacion;
     private EstadoPedido estadoPedido;
     private Ubicacion ubicacionEntrega;
     private Ubicacion ubicacionActual;
     private Long tenantId;
     private Long rutaId;
-    private Long driverId;
+    private UUID driverId;
     private String compradorName;
     private String observacion;
     private TipoPedido tipoPedido;
+    private String codigoSeguimiento;
 }

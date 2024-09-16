@@ -5,6 +5,7 @@ import com.example.logistic.mapper.PedidoMapper;
 import com.example.logistic.mapper.VendedorMapper;
 import com.example.logistic.model.dtos.DriverDTO;
 import com.example.logistic.model.dtos.PedidoDTO;
+import com.example.logistic.model.dtos.PedidoMapaDTO;
 import com.example.logistic.model.dtos.VendedorDTO;
 import com.example.logistic.model.roles.Vendedor;
 import com.example.logistic.model.ruta.paquete.EstadoPedido;
@@ -25,7 +26,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -41,31 +44,25 @@ public class PedidoController {
     private VendedorService vendedorService;
     @Autowired
     private LocalService localService;
-
+    @GetMapping()
+    public ResponseEntity<List<PedidoMapaDTO>> getPedidosMapaHoy (@RequestParam String date) {
+        List<PedidoMapaDTO> pedidos = pedidoService.findPedidosByDateForMap(date);
+        return ResponseEntity.ok(pedidos);
+    }
     @GetMapping("/{id}")
     public ResponseEntity<PedidoDTO> getPedidoDTO(@PathVariable Long id) {
         return ResponseEntity.ok(pedidoMapper.toDTO(pedidoService.getPedidoById(id)));
     }
+    @PostMapping("/cargar/particular")
+    public ResponseEntity<PedidoDTO> cargarPaqueteParticular(@RequestBody Map<String, Object> pedidoData) {
 
-    public ResponseEntity<PedidoDTO> cargarPaqueteParticular(String contenido,
-                                                           VendedorDTO vendedorDTO,
-                                                           Ubicacion ubicacionEntrega,
-                                                           Local local,
-                                                             String compradorName) {
-
-        PedidoDTO pedidoDTO = pedidoService.cargarPedidoParticular(contenido, vendedorDTO, ubicacionEntrega, local, compradorName);
+        PedidoDTO pedidoDTO = pedidoService.cargarPedidoParticular(pedidoData);
         return ResponseEntity.ok(pedidoDTO);
     }
-    public ResponseEntity<PedidoDTO> cargarPedidoMeli (String contenido,
-                                                       VendedorDTO vendedorDTO,
-                                                       Ubicacion ubicacionEntrega,
-                                                       Local local,
-                                                      String orderId,
-                                                      String sellerId,
-                                                      String compradorName) {
-        PedidoDTO pedidoDTO = pedidoService.cargarPedidoMeli(contenido, vendedorDTO, ubicacionEntrega, local, orderId, sellerId, compradorName);
+    /*public ResponseEntity<PedidoDTO> cargarPedidoMeli (@RequestBody Map<String, Object> pedidoData) {
+        PedidoDTO pedidoDTO = pedidoService.cargarPedidoMeli(Map<String, Object> pedidoData);
         return ResponseEntity.ok(pedidoDTO);
-    }
+    }*/
 
     // Driver marca cuando entrega un paquete
     public ResponseEntity<PedidoDTO> marcarPaqueteEntregado (@RequestParam PedidoDTO pedidoDTO) {
@@ -81,11 +78,13 @@ public class PedidoController {
         Page<PedidoDTO> pedidoDTOS = pedidoService.findPedidosByVendedor(vendedorDTO, PageRequest.of(page, size));
         return ResponseEntity.ok(pedidoDTOS);
     }
-    public ResponseEntity<List<PedidoDTO>> getPaquetesByDriver (DriverDTO driverDTO) {
+    public ResponseEntity<List<PedidoDTO>> getPaquetesByDriver (@RequestBody DriverDTO driverDTO,
+                                                                @RequestParam int page,
+                                                                @RequestParam int size) {
         if (driverDTO == null) {
             throw new RuntimeException("Driver es nulo");
         }
-        List<Pedido> paquetes = pedidoService.findPedidosByDriverId(driverDTO.getId());
+        Page<Pedido> paquetes = pedidoService.findPedidosByDriverId(driverDTO.getId(), PageRequest.of(page, size));
         // re clean esta linea
         List<PedidoDTO> paqueteDTOS = paquetes.stream().map(pedidoMapper::toDTO).collect(Collectors.toList());
         return ResponseEntity.ok(paqueteDTOS);
@@ -109,5 +108,11 @@ public class PedidoController {
         pedidoService.save(pedido);
         // ver si crear viaje aca o no
         return ResponseEntity.ok(pedidoMapper.toDTO(pedido));
+    }
+    public ResponseEntity<Page<PedidoDTO>> getPedidosByDate (@RequestParam String date,
+                                                             @RequestParam(defaultValue = "0") int page,
+                                                            @RequestParam(defaultValue = "30") int size) {
+        Page<PedidoDTO> pedidoDTOS = pedidoService.findPedidosByDate(date, PageRequest.of(page, size));
+        return ResponseEntity.ok(pedidoDTOS);
     }
 }

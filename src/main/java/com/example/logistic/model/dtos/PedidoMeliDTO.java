@@ -8,4 +8,5 @@ import lombok.Setter;
 public class PedidoMeliDTO extends PedidoDTO{
     private String orderId; // ID pedido mercado libre
     private String sellerId; // ID vendedor MELI
+
 }

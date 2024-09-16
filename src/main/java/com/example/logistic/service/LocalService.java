@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class LocalService {
     @Autowired
     private LocalRepository localRepository;
-    public Local getById (Integer id) {
+    public Local findById (Long id) {
         return localRepository.getReferenceById(id);
     }
 }

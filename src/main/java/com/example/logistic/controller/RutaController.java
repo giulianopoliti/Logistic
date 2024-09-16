@@ -14,6 +14,7 @@ import com.example.logistic.service.DriverService;
 import com.example.logistic.service.PedidoService;
 import com.example.logistic.service.RutaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,16 +44,10 @@ public class RutaController {
         return null;
     }
 
-    @PostMapping
-    public ResponseEntity<RutaDTO> crearRuta(@RequestParam List<PedidoDTO> pedidoDTOS,
-                                          DriverDTO driverDTO) {
-        List<Pedido> paquetes = pedidoDTOS.stream()
-                .map(paqueteDTO -> pedidoService.getPedidoById(paqueteDTO.getId()))
-                .collect(Collectors.toList());
-        Driver driver = driverService.getDriverById(driverDTO.getId());
-        Ruta ruta = new Ruta(driver, paquetes);
-        rutaService.save(ruta);
-        return ResponseEntity.ok(rutaMapper.toDTO(ruta)); // REVEER COMO MAPEA DE RUTA A RUTADTO
+    @PostMapping("/crear")
+    public ResponseEntity<RutaDTO> crearRuta(@RequestBody RutaDTO rutaDTO) {
+        RutaDTO nuevaRuta = rutaService.crearRuta(rutaDTO);
+        return new ResponseEntity<>(nuevaRuta, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}/viajes")

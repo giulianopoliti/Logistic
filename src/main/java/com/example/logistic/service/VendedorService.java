@@ -3,6 +3,7 @@ package com.example.logistic.service;
 import com.example.logistic.mapper.VendedorMapper;
 import com.example.logistic.model.dtos.TenantDTO;
 import com.example.logistic.model.dtos.VendedorDTO;
+import com.example.logistic.model.roles.Driver;
 import com.example.logistic.model.roles.Tenant;
 import com.example.logistic.model.roles.Vendedor;
 import com.example.logistic.model.ruta.paquete.Pedido;
@@ -12,14 +13,13 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class VendedorService {
+public class VendedorService extends UsuarioService<Vendedor> {
     @Autowired
     private VendedorRepository vendedorRepository;
     @Autowired
@@ -29,10 +29,10 @@ public class VendedorService {
     @Autowired
     private VendedorMapper vendedorMapper;
 
-    public Vendedor findById(Long id) {
+    public Vendedor findById(UUID id) {
         return vendedorRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
-    public VendedorDTO findByIdAsDTO(Long id) {
+    public VendedorDTO findByIdAsDTO(UUID id) {
         return vendedorMapper.toDTO(findById(id));
     }
     public List<Vendedor> findVendedoresByTenant (TenantDTO tenantDTO) {
@@ -44,35 +44,17 @@ public class VendedorService {
         return vendedorRepository.save(vendedor);
     }
 
-    public List<Pedido> findPaquetesPorCliente(Long vendedorId) {
+    public List<Pedido> findPaquetesPorCliente(UUID vendedorId) {
         Vendedor vendedor = findById(vendedorId);
         return vendedor.getPedidos();
     }
 
-    public Pedido createPaquete(Long vendedorId, Pedido pedido) {
+    public Pedido createPaquete(UUID vendedorId, Pedido pedido) {
         Vendedor vendedor = findById(vendedorId);
         pedido.setVendedor(vendedor);
         return pedidoRepository.save(pedido);
     }
-    public Vendedor crearVendedorConAcceso(Map<String, Object> clienteData) {
-
-        Tenant tenant = tenantService.getById((Integer) clienteData.get("tenantId"));
-
-        // Crea la entidad Vendedor
-        Vendedor vendedor = new Vendedor(
-                (String) clienteData.get("name"),
-                (String) clienteData.get("lastName"),
-                (Date) clienteData.get("dateOfBirth"),
-                tenant,
-                (String) clienteData.get("email"),
-                (String) clienteData.get("username"),
-                (String) clienteData.get("password")
-        );
-
-        // Guarda la entidad en la base de datos
-        vendedorRepository.save(vendedor);
-
-        // Convierte la entidad guardada a DTO y la retorna
-        return vendedor;
+    public Vendedor createVendedor(Map<String, Object> vendedorData) throws InstantiationException, IllegalAccessException {
+        return createUser(vendedorData, Vendedor.class);
     }
 }

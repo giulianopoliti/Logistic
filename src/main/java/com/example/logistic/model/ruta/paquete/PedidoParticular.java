@@ -5,12 +5,14 @@ import com.example.logistic.model.roles.Tenant;
 import com.example.logistic.model.roles.Vendedor;
 import com.example.logistic.model.ruta.Ubicacion;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Setter
 @Getter
+@Table(name = "pedidos")
 public class PedidoParticular extends Pedido{
     public PedidoParticular(String contenido, Vendedor vendedor, Ubicacion ubicacionEntrega, Ubicacion ubicacionActual, Tenant tenant, String compradorName) {
         super(contenido, vendedor, ubicacionEntrega, ubicacionActual, tenant, compradorName);

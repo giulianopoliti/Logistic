@@ -6,14 +6,16 @@ import com.example.logistic.model.ruta.paquete.Pedido;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+
 @Entity
 @Setter
 @Getter
 @DiscriminatorValue("DRIVER")
+@Table(name = "usuarios")
 public class Driver extends Usuario {
     @OneToOne
     @JoinColumn(name = "id_vehiculo")
@@ -32,8 +34,13 @@ public class Driver extends Usuario {
     private EstadoDriver estadoDriver;
 
 
-    public Driver(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String username, String password) {
-        super(name, lastName, dateOfBirth, tenant, email, username, password);
+    public Driver(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String phone, String emergencyPhone, String username, String cuil, String address, Date createdAt, String profilePictureURL, Vehiculo vehiculo, IntegracionMeliDriver integracionMeliDriver, EstadoDriver estadoDriver) {
+        super(name, lastName, dateOfBirth, tenant, email, phone, emergencyPhone, username, cuil, address, createdAt, profilePictureURL);
+        this.vehiculo = vehiculo;
+        this.rutas = new ArrayList<>();
+        this.pedidos = new ArrayList<>();
+        this.integracionMeliDriver = integracionMeliDriver;
+        this.estadoDriver = EstadoDriver.EN_DESCANSO;
     }
 
     public Driver() {
@@ -50,6 +57,10 @@ public class Driver extends Usuario {
         ruta.setDriver(this);
         this.rutas.add(ruta);
         return ruta;
+    }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_DRIVER"));
     }
 
 }

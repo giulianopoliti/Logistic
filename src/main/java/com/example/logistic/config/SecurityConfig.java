@@ -15,17 +15,18 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests(authorizeRequests ->
+        http.authorizeRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/api/public/**").permitAll()
                                 .requestMatchers("/api/vendedor/**").hasRole("VENDEDOR")
                                 .requestMatchers("/api/driver/**").hasRole("DRIVER")
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/api/superadmin/**").hasRole("SUPERADMIN")
                                 .anyRequest().authenticated()
                 )
                 .formLogin(withDefaults())
                 .csrf(csrf -> csrf.disable()); // Considera habilitar CSRF para producción
+
         return http.build();
     }
 

@@ -28,10 +28,10 @@ public class VendedorController {
 
 
     @PostMapping("/registro")
-    public ResponseEntity<Vendedor> crearVendedorConAcceso (@RequestBody Map<String, Object> clienteData) {
+    public ResponseEntity<VendedorDTO> crearVendedorConAcceso (@RequestBody Map<String, Object> clienteData) {
         // Llama a la capa de servicio para manejar la lógica de creación y conversión
-        Vendedor vendedor = vendedorService.crearVendedorConAcceso(clienteData);
-        return ResponseEntity.ok(vendedor);
+        VendedorDTO vendedorDTO = vendedorService.crearVendedorConAcceso(clienteData);
+        return ResponseEntity.ok(vendedorDTO);
     }
     // Habria que crear para clientes sin acceso a la app. Y que pueda migrar los paquetes el administrador
 

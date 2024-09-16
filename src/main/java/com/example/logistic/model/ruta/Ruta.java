@@ -36,10 +36,11 @@ public class Ruta {
     public Ruta() {
 
     }
-    public Ruta (Driver driver, List<Pedido> pedidos) {
+    public Ruta (Driver driver, List<Pedido> pedidos, Tenant tenant) {
         this.pedidos = pedidos;
         this.driver = driver;
         this.date = new Date();
+        this.tenant = tenant;
     }
     public void addPedido (Pedido pedido) {
         this.pedidos.add(pedido);

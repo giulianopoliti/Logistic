@@ -30,18 +30,7 @@ public class AdminController {
     private UsuarioService usuarioService;
     @PostMapping("/registro")
     public ResponseEntity<AdminDTO> crearAdmin (@RequestBody Map<String, Object> adminData) {
-        Tenant tenant = tenantService.getById((Integer) adminData.get("tenantId"));
-        // aca deberiamos encriptar la contraseña
-        Admin admin = new Admin((String)adminData.get("name"),
-                (String)adminData.get("lastName"),
-                (Date) adminData.get("dateOfBirth"),
-                tenant,
-                (String)adminData.get("email"),
-                (String)adminData.get("username"),
-                (String)adminData.get("password"));
- // reveer esto
-        adminService.save(admin);
-        return ResponseEntity.ok(adminMapper.toDTO(admin));
+        return null;
     }
 
     // Paginacion

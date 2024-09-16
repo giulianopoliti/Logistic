@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/drivers")
@@ -27,25 +28,25 @@ public class DriverController {
     @Autowired
     private TenantService tenantService;
     @PostMapping
-    public ResponseEntity<DriverDTO> crearDriver(@RequestBody Map<String, Object> driverData) {
-        Driver driver = driverService.crearDriver(driverData);
+    public ResponseEntity<DriverDTO> crearDriver(@RequestBody Map<String, Object> driverData) throws InstantiationException, IllegalAccessException {
+        Driver driver = driverService.createDriver(driverData);
         DriverDTO driverDTO = driverMapper.toDTO(driver);
         return ResponseEntity.status(HttpStatus.CREATED).body(driverDTO);
     }
 
     @PutMapping("/agregarVehiculo")
-    public ResponseEntity<DriverDTO> agregarVehiculo(@RequestParam Long driverId, @RequestBody Vehiculo vehiculo) {
+    public ResponseEntity<DriverDTO> agregarVehiculo(@RequestParam UUID driverId, @RequestBody Vehiculo vehiculo) {
         Driver driver = driverService.modificarVehiculo(driverId, vehiculo);
         return ResponseEntity.ok(driverMapper.toDTO(driver));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Driver> getDriver(@PathVariable Long id) {
+    public ResponseEntity<Driver> getDriver(@PathVariable UUID id) {
         Driver driver = driverService.getDriverById(id);
         DriverDTO driverDTO = driverMapper.toDTO(driver);
         return ResponseEntity.ok(driver);
     }
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<DriverDTO>> getDrivers () {
         List <Driver> drivers = driverService.getDrivers();
         List<DriverDTO> driverDTOS = drivers.stream().map(driver -> driverMapper.toDTO(driver)).toList();
