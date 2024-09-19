@@ -23,13 +23,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.springframework.security.authorization.AuthorityReactiveAuthorizationManager.hasAnyRole;
 
 @RestController
 @RequestMapping("/api/pedidos")
@@ -44,16 +44,18 @@ public class PedidoController {
     private VendedorService vendedorService;
     @Autowired
     private LocalService localService;
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERADORDEPOSITO')")
     @GetMapping()
     public ResponseEntity<List<PedidoMapaDTO>> getPedidosMapaHoy (@RequestParam String date) {
         List<PedidoMapaDTO> pedidos = pedidoService.findPedidosByDateForMap(date);
         return ResponseEntity.ok(pedidos);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<PedidoDTO> getPedidoDTO(@PathVariable Long id) {
-        return ResponseEntity.ok(pedidoMapper.toDTO(pedidoService.getPedidoById(id)));
+    public ResponseEntity<PedidoDTO> getPedidoDTO(@PathVariable UUID uuid) {
+        return ResponseEntity.ok(pedidoMapper.toDTO(pedidoService.getPedidoByUuid(uuid)));
     }
     @PostMapping("/cargar/particular")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERADORDEPOSITO', 'VENDEDOR')")
     public ResponseEntity<PedidoDTO> cargarPaqueteParticular(@RequestBody Map<String, Object> pedidoData) {
 
         PedidoDTO pedidoDTO = pedidoService.cargarPedidoParticular(pedidoData);
@@ -65,13 +67,14 @@ public class PedidoController {
     }*/
 
     // Driver marca cuando entrega un paquete
+    @PreAuthorize("hasAnyRole('DRIVER', 'ADMIN')")
     public ResponseEntity<PedidoDTO> marcarPaqueteEntregado (@RequestParam PedidoDTO pedidoDTO) {
         PedidoDTO pedido = pedidoService.marcarPaqueteEntregado(pedidoDTO);
         return ResponseEntity.ok(pedido);
     }
 
     // El driver puede marcar cuando no llega a entregar un paquete
-
+    @PreAuthorize("hasAnyRole('ROLE_VENDEDOR', 'ADMIN')")
     public ResponseEntity<Page<PedidoDTO>> getPaquetesVendedor (@RequestBody VendedorDTO vendedorDTO,
                                                                @RequestParam int page,
                                                                @RequestParam int size) {
@@ -84,7 +87,7 @@ public class PedidoController {
         if (driverDTO == null) {
             throw new RuntimeException("Driver es nulo");
         }
-        Page<Pedido> paquetes = pedidoService.findPedidosByDriverId(driverDTO.getId(), PageRequest.of(page, size));
+        Page<Pedido> paquetes = pedidoService.findPedidosByDriverId(driverDTO.getUuid(), PageRequest.of(page, size));
         // re clean esta linea
         List<PedidoDTO> paqueteDTOS = paquetes.stream().map(pedidoMapper::toDTO).collect(Collectors.toList());
         return ResponseEntity.ok(paqueteDTOS);
@@ -103,7 +106,7 @@ public class PedidoController {
     // cuando el driver escanea el qr de flex, cambia el estado a que lo tiene el driver,
     // ya esta en el sistema
     public ResponseEntity<PedidoDTO> marcarPaqueteDespachado (PedidoDTO pedidoDTO) {
-        Pedido pedido = pedidoService.getPedidoById(pedidoDTO.getId());
+        Pedido pedido = pedidoService.getPedidoByUuid(pedidoDTO.getUuid());
         pedido.setEstadoPedido(EstadoPedido.DESPACHADO);
         pedidoService.save(pedido);
         // ver si crear viaje aca o no

@@ -13,6 +13,6 @@ import java.util.UUID;
 public interface VendedorRepository extends JpaRepository<Vendedor, UUID>{
 
     // Consulta personalizada utilizando JPQL
-    @Query("SELECT c FROM Vendedor c WHERE c.tenant.id = :tenantId")
-    List<Vendedor> findVendedoresByTenant(Long tenantId);
+    @Query("SELECT c FROM Vendedor c WHERE c.tenant.uuid = :tenantUuid")
+    List<Vendedor> findVendedoresByTenant(UUID tenantUuid);
 }

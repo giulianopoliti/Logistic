@@ -5,14 +5,16 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 // Reveer esto, para vender el software, vamos a tener que tener muchos depositos, es decir una tabla deposito
 @Entity
 @Getter
 @Setter
 public class Deposito {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    private UUID uuid;
     @Embedded
     private Ubicacion ubicacion;
     @ManyToOne

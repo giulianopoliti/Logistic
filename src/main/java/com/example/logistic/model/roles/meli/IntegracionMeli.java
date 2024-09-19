@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -13,8 +14,8 @@ import java.util.Date;
 @Setter
 public abstract class IntegracionMeli {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(generator = "UUID")
+    private UUID uuid;
 
     private String accessToken;
     private String refreshToken;

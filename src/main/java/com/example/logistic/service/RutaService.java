@@ -30,32 +30,32 @@ public class RutaService {
     @Autowired
     private TenantService tenantService;
 
-    public Ruta getRutaById(Long id) {
-        return rutaRepository.findById(id).orElseThrow(() -> new RuntimeException("Ruta no encontrada"));
+    public Ruta getRutaById(UUID uuid) {
+        return rutaRepository.findById(uuid).orElseThrow(() -> new RuntimeException("Ruta no encontrada"));
     }
 
     public Ruta save(Ruta ruta) {
         return rutaRepository.save(ruta);
     }
 
-    public Ruta actualizarViajes(Long rutaId, List<Pedido> pedidos) {
-        Ruta ruta = getRutaById(rutaId);
+    public Ruta actualizarViajes(UUID rutaUuid, List<Pedido> pedidos) {
+        Ruta ruta = getRutaById(rutaUuid);
         ruta.setPedidos(pedidos);
         return rutaRepository.save(ruta);
     }
-    public Ruta findByDriverId(UUID driverId) {
-        return rutaRepository.findByDriverId(driverId, new Date()); // esto te trae la primera ruta que encuentra del driver
+    public Ruta findByDriverId(UUID driverUuid) {
+        return rutaRepository.findByDriverId(driverUuid, new Date()); // esto te trae la primera ruta que encuentra del driver
     }
-    public List<Ruta> findByDay (Date date, Long tenantId) {
-        return rutaRepository.findByDay(date, tenantId);
+    public List<Ruta> findByDay (Date date, UUID tenantUuid) {
+        return rutaRepository.findByDay(date, tenantUuid);
     }
 
     public RutaDTO crearRuta(RutaDTO rutaDTO) {
-        Driver driver = driverService.getDriverById(rutaDTO.getDriverId());
-        Tenant tenant = tenantService.getById(rutaDTO.getTenantId());
+        Driver driver = driverService.getDriverById(rutaDTO.getDriverUuid());
+        Tenant tenant = tenantService.getByUuid(rutaDTO.getTenantUuid());
         List<Pedido> pedidos = new ArrayList<>();
         for (int i = 0; i < rutaDTO.getPedidoDTOS().size(); i++) {
-            Pedido pedido = pedidoService.getPedidoById(rutaDTO.getPedidoDTOS().get(i).getId());
+            Pedido pedido = pedidoService.getPedidoByUuid(rutaDTO.getPedidoDTOS().get(i).getUuid());
             pedidos.add(pedido);
         }
         Ruta ruta = new Ruta(driver, pedidos, tenant);

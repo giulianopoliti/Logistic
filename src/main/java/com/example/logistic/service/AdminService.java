@@ -9,20 +9,22 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @Service
-public class AdminService extends UsuarioService<Admin> {
+public class AdminService extends UsuarioService {
     private final AdminRepository adminRepository;
 
     @Autowired
     public AdminService(AdminRepository adminRepository) {
         this.adminRepository = adminRepository;
     }
-    public void save (Admin admin) {
+    public Admin save (Admin admin) {
         if (admin == null) {
             throw new RuntimeException("Error al guardar el admin");
         }
-        adminRepository.save(admin);
+        return adminRepository.save(admin);
     }
     public Admin createAdmin(Map<String, Object> adminData) throws InstantiationException, IllegalAccessException {
-        return createUser(adminData, Admin.class);
+        Admin admin = new Admin();
+        // implementar logica para guardar la data
+        return save(admin);
     }
 }

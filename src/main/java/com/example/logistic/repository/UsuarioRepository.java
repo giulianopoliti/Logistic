@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
+public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
     @Query("SELECT u FROM Usuario u WHERE u.authId = :authId")
     Usuario findByAuthId(@Param("authId") UUID authId);
 }

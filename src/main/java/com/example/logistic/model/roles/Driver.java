@@ -44,7 +44,8 @@ public class Driver extends Usuario {
     }
 
     public Driver() {
-
+        super();
+        this.setRol(Role.DRIVER);
     }
     public void modificarVehiculo (Vehiculo vehiculo) {
         this.vehiculo = vehiculo;

@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface RutaRepository extends JpaRepository<Ruta, Long> {
+public interface RutaRepository extends JpaRepository<Ruta, UUID> {
     // Consulta para obtener la ruta por el id del driver
     // Consulta para obtener la ruta del driver por fecha actual
-    @Query("SELECT r FROM Ruta r WHERE r.driver.authId = :driverId AND r.date = :date AND r.completada = false")
-    Ruta findByDriverId(@Param("driverId") UUID driverId, @Param("date") Date date);
+    @Query("SELECT r FROM Ruta r WHERE r.driver.authId = :driverAuthId AND r.date = :date AND r.completada = false")
+    Ruta findByDriverId(@Param("driverAuthId") UUID driverAuthId, @Param("date") Date date);
 
-    @Query("SELECT r FROM Ruta r WHERE r.date = :date and r.tenant.id = :tenantId")
-    List<Ruta> findByDay(@Param("date") Date date ,@Param("tenantId") Long tenantId);
+    @Query("SELECT r FROM Ruta r WHERE r.date = :date and r.tenant.uuid = :tenantUuid")
+    List<Ruta> findByDay(@Param("date") Date date ,@Param("tenantUuid") UUID tenantUuid);
 }

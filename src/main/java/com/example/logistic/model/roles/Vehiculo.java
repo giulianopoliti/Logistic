@@ -4,12 +4,18 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
 public class Vehiculo {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private Integer id;
+    @GeneratedValue(generator = "UUID")
+    private UUID uuid;
 
     private TipoVehiculo tipoVehiculo;
     private String patente;
@@ -23,11 +29,5 @@ public class Vehiculo {
 
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
-    public Integer getId() {
-        return id;
-    }
 }

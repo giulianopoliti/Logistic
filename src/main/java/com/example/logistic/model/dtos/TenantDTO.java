@@ -5,11 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class TenantDTO {
-    private Long id;
+    private UUID uuid;
 
     @NotBlank(message = "El nombre del tenant no puede estar vacío")
     @Size(min = 2, max = 100, message = "El nombre del tenant debe tener entre 2 y 100 caracteres")
@@ -22,22 +23,23 @@ public class TenantDTO {
     @NotNull(message = "El estado activo/inactivo no puede ser nulo")
     private Boolean activo;
 
-    @Size(max = 500, message = "La descripción no puede exceder los 500 caracteres")
-    private String descripcion;
+    @Size(max = 100, message = "La razon social no puede exceder los 500 caracteres")
+    private String razonSocial;
 
-    @Pattern(regexp = "^[A-Z]{2}$", message = "El código de país debe ser de 2 letras mayúsculas")
-    private String codigoPais;
+    @Size(max = 100, message = "La direccion no puede exceder los 500 caracteres")
+    private String address;
 
     @Pattern(regexp = "^\\+?[0-9]{10,14}$", message = "El número de teléfono debe ser válido")
-    private String telefonoContacto;
+    private String phone;
 
     @Email(message = "El email debe ser válido")
-    private String emailContacto;
+    private String email;
 
-    private LocalDateTime fechaCreacion;
+    private LocalDateTime createdAt;
 
     private LocalDateTime fechaUltimaActualizacion;
 
     @Min(value = 0, message = "El límite de usuarios no puede ser negativo")
     private Integer limiteUsuarios;
+    private String CUIT;
 }

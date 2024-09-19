@@ -11,16 +11,16 @@ import java.util.UUID;
 @Getter
 @Setter
 public abstract class PedidoDTO {
-    private Long id;
+    private UUID uuid;
     private String contenido;
-    private UUID vendedorId;
+    private UUID vendedorUuid;
     private Date fechaCreacion;
     private EstadoPedido estadoPedido;
     private Ubicacion ubicacionEntrega;
     private Ubicacion ubicacionActual;
-    private Long tenantId;
-    private Long rutaId;
-    private UUID driverId;
+    private UUID tenantUuid;
+    private UUID rutaUuid;
+    private UUID driverUuid;
     private String compradorName;
     private String observacion;
     private TipoPedido tipoPedido;

@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.UUID;
+
 @Getter
 @Setter
 @Entity
@@ -18,8 +20,8 @@ import java.util.Date;
 @DiscriminatorColumn(name = "tipo_pedido", discriminatorType = DiscriminatorType.STRING)
 public abstract class Pedido {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    private UUID uuid;
 
     private String contenido;
 

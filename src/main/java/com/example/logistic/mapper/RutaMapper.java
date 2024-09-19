@@ -15,8 +15,8 @@ public class RutaMapper {
     private PedidoMapper pedidoMapper;
     public RutaDTO toDTO (Ruta ruta) {
         RutaDTO rutaDTO = new RutaDTO();
-        rutaDTO.setDriverId(ruta.getDriver().getAuthId());
-        rutaDTO.setId(ruta.getId());
+        rutaDTO.setDriverUuid(ruta.getDriver().getAuthId());
+        rutaDTO.setUuid(ruta.getUuid());
         rutaDTO.setDate(ruta.getDate());
         rutaDTO.setCompletada(ruta.isCompletada());
         for (int i = 0; i < ruta.getPedidos().size(); i++) {

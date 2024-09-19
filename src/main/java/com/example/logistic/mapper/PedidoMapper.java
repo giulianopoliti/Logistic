@@ -21,18 +21,18 @@ public class PedidoMapper {
         } else {
             pedidoDTO = new PedidoParticularDTO();
         }
-        pedidoDTO.setId(pedidoDTO.getId());
+        pedidoDTO.setUuid(pedidoDTO.getUuid());
         pedidoDTO.setContenido(pedido.getContenido());
-        pedidoDTO.setVendedorId(pedido.getVendedor().getAuthId());
+        pedidoDTO.setUuid(pedido.getVendedor().getAuthId());
         pedidoDTO.setFechaCreacion(pedido.getFechaCreacion());
         pedidoDTO.setUbicacionActual(pedido.getUbicacionActual());
         pedidoDTO.setUbicacionEntrega(pedido.getUbicacionEntrega());
-        pedidoDTO.setTenantId(pedido.getTenant().getId());
-        if (pedidoDTO.getRutaId() != null) {
-            pedidoDTO.setRutaId(pedido.getRuta().getId());
+        pedidoDTO.setTenantUuid(pedido.getTenant().getUuid());
+        if (pedidoDTO.getRutaUuid() != null) {
+            pedidoDTO.setRutaUuid(pedido.getRuta().getUuid());
         }
-        if (pedidoDTO.getDriverId() != null) {
-            pedidoDTO.setDriverId(pedido.getDriver().getAuthId());
+        if (pedidoDTO.getDriverUuid() != null) {
+            pedidoDTO.setDriverUuid(pedido.getDriver().getAuthId());
         }
         pedidoDTO.setCompradorName(pedido.getCompradorName());
         if (pedidoDTO.getObservacion() != null) {

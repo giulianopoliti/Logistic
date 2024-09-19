@@ -69,6 +69,8 @@ public abstract class Usuario {
     @JoinColumn(name = "auth_id")
     private Configuration configuration;
 
+    @Enumerated(EnumType.STRING)
+    private Role rol;
 
 
     public Usuario(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String phone, String emergencyPhone,

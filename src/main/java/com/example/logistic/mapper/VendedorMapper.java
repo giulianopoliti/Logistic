@@ -7,8 +7,8 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface VendedorMapper {
-    @Mapping(source = "tenant.id", target = "tenantId")
+    @Mapping(source = "tenant.uuid", target = "tenantUuid")
     VendedorDTO toDTO(Vendedor vendedor);
-    @Mapping(source = "tenantId", target = "tenant.id")
+    @Mapping(source = "tenantUuid", target = "tenant.uuid")
     Vendedor toEntity(VendedorDTO vendedorDTO);
 }

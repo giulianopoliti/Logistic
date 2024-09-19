@@ -12,12 +12,12 @@ import java.util.UUID;
 @Getter
 @Setter
 public class RutaDTO {
-    private Long id;
+    private UUID uuid;
     private Date date;
-    private UUID driverId;
+    private UUID driverUuid;
     private List<PedidoDTO> pedidoDTOS;
     private boolean completada;
-    private Long tenantId;
+    private UUID tenantUuid;
     public RutaDTO () {
         this.pedidoDTOS = new ArrayList<>();
     }

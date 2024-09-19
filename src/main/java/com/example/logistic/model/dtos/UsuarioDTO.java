@@ -1,5 +1,7 @@
 package com.example.logistic.model.dtos;
 
+import com.example.logistic.model.roles.Role;
+import jakarta.persistence.GeneratedValue;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,8 +14,9 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public abstract class PersonaDTO {
-    private UUID id;
+
+public abstract class UsuarioDTO {
+    private UUID uuid;
 
     @NotBlank(message = "El nombre no puede estar vacío")
     @Size(min = 2, max = 50, message = "El nombre debe tener entre 2 y 50 caracteres")
@@ -28,9 +31,10 @@ public abstract class PersonaDTO {
     private String username;
 
     @NotNull(message = "El ID del tenant no puede ser nulo")
-    private Long tenantId;
+    private UUID tenantUuid;
 
     private boolean isActive;
+    private Role rol;
 
     @NotBlank(message = "El email no puede estar vacío")
     @Email(message = "El email debe ser válido")

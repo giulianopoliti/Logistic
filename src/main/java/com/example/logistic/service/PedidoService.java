@@ -34,12 +34,12 @@ public class PedidoService {
     @Autowired
     private LocalService localService;
 
-    public Pedido getPedidoById(Long id) {
-        return pedidoRepository.findById(id).orElseThrow(() -> new RuntimeException("Paquete no encontrado"));
+    public Pedido getPedidoByUuid(UUID uuid) {
+        return pedidoRepository.findById(uuid).orElseThrow(() -> new RuntimeException("Paquete no encontrado"));
     }
 
-    public Pedido actualizarEstadoPedido(Long id, EstadoPedido estado) {
-        Pedido pedido = getPedidoById(id);
+    public Pedido actualizarEstadoPedido(UUID uuid, EstadoPedido estado) {
+        Pedido pedido = getPedidoByUuid(uuid);
         pedido.setEstadoPedido(estado);
         return pedidoRepository.save(pedido);
     }
@@ -61,7 +61,7 @@ public class PedidoService {
                                       String orderId,
                                       String sellerId,
                                       String compradorName) {
-        Vendedor vendedor = vendedorService.findById(vendedorDTO.getId());
+        Vendedor vendedor = vendedorService.findById(vendedorDTO.getUuid());
 
         Pedido pedido = new PedidoMeli(contenido, vendedor, ubicacionEntrega,local.getUbicacion(), vendedor.getTenant(), orderId, sellerId, compradorName);
         save(pedido);
@@ -78,12 +78,12 @@ public class PedidoService {
         System.out.println(latitud + longitud);
 
         Number vendedorIdNumber = (Number) pedidoData.get("vendedorId");
-        UUID vendedorId = vendedorIdNumber != null ? UUID.fromString(vendedorIdNumber.toString()) : null;
-        System.out.println(vendedorId);
+        UUID vendedorUuid = vendedorIdNumber != null ? UUID.fromString(vendedorIdNumber.toString()) : null;
+        System.out.println(vendedorUuid);
 
         Number localIdNumber = (Number) pedidoData.get("localId");
-        Long localId = localIdNumber != null ? localIdNumber.longValue() : null;
-        System.out.println(localId);
+        UUID localUuid = localIdNumber != null ? UUID.fromString(localIdNumber.toString()) : null;
+        System.out.println(localUuid);
 
         String compradorName = (String) pedidoData.get("compradorName");
         System.out.println(compradorName);
@@ -98,14 +98,14 @@ public class PedidoService {
         Ubicacion ubicacionEntrega = new Ubicacion(latitud, longitud);
 
         // Buscar Local y Vendedor
-        Local local = localService.findById(localId);
-        Vendedor vendedor = vendedorService.findById(vendedorId);
+        Local local = localService.findByUUID(localUuid);
+        Vendedor vendedor = vendedorService.findById(vendedorUuid);
 
         if (vendedor == null) {
-            throw new RuntimeException("Vendedor no encontrado con id: " + vendedorId);
+            throw new RuntimeException("Vendedor no encontrado con id: " + vendedorUuid);
         }
         if (local == null) {
-            throw new RuntimeException("Local no encontrado con id: " + localId);
+            throw new RuntimeException("Local no encontrado con id: " + localUuid);
         }
 
         // Crear el pedido y guardarlo
@@ -117,12 +117,12 @@ public class PedidoService {
     }
 
     public PedidoDTO marcarPaqueteEntregado (PedidoDTO pedidoDTO) {
-        Pedido pedido = getPedidoById(pedidoDTO.getId());
+        Pedido pedido = getPedidoByUuid(pedidoDTO.getUuid());
         pedido.setEstadoPedido(EstadoPedido.ENTREGADO);
         return pedidoMapper.toDTO(save(pedido));
     }
     public Page<PedidoDTO> findPedidosByVendedor(VendedorDTO vendedorDTO, Pageable pageable) {
-        Vendedor vendedor = vendedorService.findById(vendedorDTO.getId());
+        Vendedor vendedor = vendedorService.findById(vendedorDTO.getUuid());
 
         // Usar la paginación en la consulta
         Page<Pedido> pedidosPage = pedidoRepository.findPedidosByVendedorId(vendedor.getAuthId(), pageable);
@@ -132,7 +132,7 @@ public class PedidoService {
     }
     public List<PedidoDTO> cargarPedidosParticular (List<PedidoDTO> pedidoDTOS) {
         for (int i = 0; i < pedidoDTOS.size(); i++) {
-            Vendedor vendedor = vendedorService.findById(pedidoDTOS.get(i).getVendedorId());
+            Vendedor vendedor = vendedorService.findById(pedidoDTOS.get(i).getVendedorUuid());
             Pedido pedido = new PedidoParticular(pedidoDTOS.get(i).getContenido(), vendedor, pedidoDTOS.get(i).getUbicacionEntrega(), pedidoDTOS.get(i).getUbicacionActual(), vendedor.getTenant(), pedidoDTOS.get(i).getCompradorName());
             save(pedido);
         }
@@ -140,7 +140,7 @@ public class PedidoService {
     }
     public List<PedidoDTO> cargarPedidosMeli (List<PedidoDTO> pedidoDTOS) {
         for (int i = 0; i < pedidoDTOS.size(); i++) {
-            Vendedor vendedor = vendedorService.findById(pedidoDTOS.get(i).getVendedorId());
+            Vendedor vendedor = vendedorService.findById(pedidoDTOS.get(i).getVendedorUuid());
             // logica para entrar datos de meli
         }
         return pedidoDTOS;
@@ -158,7 +158,7 @@ public class PedidoService {
             PedidoMapaDTO pedidoMapaDTO = new PedidoMapaDTO();
             pedidoMapaDTO.setUbicacionEntrega(pedidos.get(i).getUbicacionEntrega());
             pedidoMapaDTO.setEstadoPedido(pedidos.get(i).getEstadoPedido());
-            pedidoMapaDTO.setId(pedidos.get(i).getId());
+            pedidoMapaDTO.setUuid(pedidos.get(i).getUuid());
             pedidosMapaDTO.add(pedidoMapaDTO);
         }
         return pedidosMapaDTO;

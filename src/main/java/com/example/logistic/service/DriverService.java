@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class DriverService extends UsuarioService<Driver> {
+public class DriverService extends UsuarioService{
     @Autowired
     private DriverRepository driverRepository;
     @Autowired
@@ -34,11 +34,11 @@ public class DriverService extends UsuarioService<Driver> {
         return driverRepository.findAll();
     }
 
-    public void save (Driver driver) {
+    public Driver save (Driver driver) {
         if (driver == null) {
             throw new RuntimeException("Error al recibir el driver, es nulo");
         }
-        driverRepository.save(driver);
+        return driverRepository.save(driver);
     }
     public Driver modificarVehiculo (UUID driverId, Vehiculo vehiculo) {
         Driver driver = getDriverById(driverId);
@@ -49,7 +49,8 @@ public class DriverService extends UsuarioService<Driver> {
         return driverRepository.save(driver);
     }
     public Driver createDriver(Map<String, Object> driverData) throws InstantiationException, IllegalAccessException {
-        return createUser(driverData, Driver.class);
+        Driver driver = new Driver();
+        return save(driver);
     }
 
 }

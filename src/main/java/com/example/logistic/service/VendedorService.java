@@ -19,7 +19,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class VendedorService extends UsuarioService<Vendedor> {
+public class VendedorService extends UsuarioService {
     @Autowired
     private VendedorRepository vendedorRepository;
     @Autowired
@@ -29,14 +29,14 @@ public class VendedorService extends UsuarioService<Vendedor> {
     @Autowired
     private VendedorMapper vendedorMapper;
 
-    public Vendedor findById(UUID id) {
-        return vendedorRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    public Vendedor findById(UUID uuid) {
+        return vendedorRepository.findById(uuid).orElseThrow(EntityNotFoundException::new);
     }
-    public VendedorDTO findByIdAsDTO(UUID id) {
-        return vendedorMapper.toDTO(findById(id));
+    public VendedorDTO findByIdAsDTO(UUID uuid) {
+        return vendedorMapper.toDTO(findById(uuid));
     }
     public List<Vendedor> findVendedoresByTenant (TenantDTO tenantDTO) {
-        List<Vendedor> vendedor = vendedorRepository.findVendedoresByTenant(tenantDTO.getId());
+        List<Vendedor> vendedor = vendedorRepository.findVendedoresByTenant(tenantDTO.getUuid());
         return vendedor;
     }
 
@@ -54,7 +54,13 @@ public class VendedorService extends UsuarioService<Vendedor> {
         pedido.setVendedor(vendedor);
         return pedidoRepository.save(pedido);
     }
-    public Vendedor createVendedor(Map<String, Object> vendedorData) throws InstantiationException, IllegalAccessException {
-        return createUser(vendedorData, Vendedor.class);
+    public VendedorDTO createVendedor(Map<String, Object> vendedorData) throws InstantiationException, IllegalAccessException {
+        Vendedor vendedor = new Vendedor();
+        // implementar logica para guardar la data
+        return vendedorMapper.toDTO(save(vendedor));
+    }
+    public List<VendedorDTO> getAllVendedores() {
+        List<Vendedor> vendedores = vendedorRepository.findAll();
+        return vendedores.stream().map(vendedorMapper::toDTO).collect(Collectors.toList());
     }
 }

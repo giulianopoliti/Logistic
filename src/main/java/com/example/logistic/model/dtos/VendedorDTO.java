@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.util.List;
 @Getter
 @Setter
-public class VendedorDTO extends PersonaDTO{
+public class VendedorDTO extends UsuarioDTO{
 
     // Constructores, getters y setters
 }

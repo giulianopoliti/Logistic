@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -23,22 +25,30 @@ public class AdminController {
     private AdminService adminService;
     @Autowired
     private AdminMapper adminMapper;
-    private AsignacionService asignacionService;
     @Autowired
     private TenantService tenantService;
     @Autowired
     private UsuarioService usuarioService;
+    @PreAuthorize("hasRole('SUPERADMIN')")
     @PostMapping("/registro")
     public ResponseEntity<AdminDTO> crearAdmin (@RequestBody Map<String, Object> adminData) {
-        return null;
+        try {
+            Admin admin= adminService.createAdmin(adminData);
+            return ResponseEntity.ok(adminMapper.toDTO(admin));
+        }
+        catch (InstantiationException | IllegalAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     // Paginacion
+    /*
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<Page<Usuario>> getAllUsersByTenant (@RequestParam int page, @RequestParam int size) {
         Pageable pageable = PageRequest.of(page,size);
         return ResponseEntity.ok(usuarioService.getAll(pageable));
     } // reveer esto,
-
+*/
 
 }

@@ -7,8 +7,8 @@ import org.mapstruct.Mapping;
 
 @Mapper (componentModel = "spring")
 public interface AdminMapper {
-    @Mapping(source = "tenant.id", target = "tenantId")
+    @Mapping(source = "tenant.uuid", target = "tenantUuid")
     AdminDTO toDTO(Admin admin);
-    @Mapping(source = "tenantId", target = "tenant.id")
+    @Mapping(source = "tenantUuid", target = "tenant.uuid")
     Admin toEntity(AdminDTO adminDTO);
 }

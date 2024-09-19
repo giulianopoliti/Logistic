@@ -5,6 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AdminDTO extends PersonaDTO{
+public class AdminDTO extends UsuarioDTO{
 
 }

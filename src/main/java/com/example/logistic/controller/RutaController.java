@@ -58,24 +58,24 @@ public class RutaController {
 
     @PutMapping("/{id}/")
     public ResponseEntity<Ruta> addPedidoCreado (@RequestParam DriverDTO driverDTO, PedidoDTO pedidoDTO) {
-        Ruta ruta = rutaService.findByDriverId(driverDTO.getId());
-        Pedido pedido = pedidoService.getPedidoById(pedidoDTO.getId());
+        Ruta ruta = rutaService.findByDriverId(driverDTO.getUuid());
+        Pedido pedido = pedidoService.getPedidoByUuid(pedidoDTO.getUuid());
         return ResponseEntity.ok(ruta);
     }
     public ResponseEntity<Ruta> finalizarRuta (DriverDTO driverDTO) {
-        Ruta ruta = rutaService.findByDriverId(driverDTO.getId());
+        Ruta ruta = rutaService.findByDriverId(driverDTO.getUuid());
         if (ruta.isCompletada()) {
             return ResponseEntity.ok(ruta);
         } else return null; // reveer esto, que rta dar
     }
     public ResponseEntity<List<RutaDTO>> getRutasByDay (@RequestParam Date date, @RequestParam Tenant tenant) {
-        List<Ruta> rutasDay = rutaService.findByDay(date, tenant.getId());
+        List<Ruta> rutasDay = rutaService.findByDay(date, tenant.getUuid());
         List<RutaDTO> rutasDTO = rutasDay.stream().map(rutaMapper::toDTO).collect(Collectors.toList());
         return ResponseEntity.ok(rutasDTO);
     }
     // ver detalle cuando hace click en una ruta. Podriamos manejarlo con mostrar todos los envios dto
     public ResponseEntity<Ruta> verDetalleRuta (@RequestParam RutaDTO rutaDTO) {
-        Ruta ruta = rutaService.getRutaById(rutaDTO.getId());
+        Ruta ruta = rutaService.getRutaById(rutaDTO.getUuid());
         return ResponseEntity.ok(ruta);
     }
     // aca esta la otra forma

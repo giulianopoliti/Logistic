@@ -34,10 +34,12 @@ public class Vendedor extends Usuario {
         this.pedidos = new ArrayList<>();
         this.locales = new ArrayList<>();
         this.integracionMeliVendedor = new ArrayList<>();
+        this.setRol(Role.VENDEDOR);
     }
 
     public Vendedor() {
         super();
+        this.setRol(Role.VENDEDOR);
     }
 
 

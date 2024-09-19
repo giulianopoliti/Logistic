@@ -1,32 +1,27 @@
 package com.example.logistic.service;
 
 import com.example.logistic.errors.ResourceNotFoundException;
+import com.example.logistic.model.dtos.UsuarioDTOMini;
 import com.example.logistic.model.roles.Tenant;
 import com.example.logistic.model.roles.Usuario;
 import com.example.logistic.repository.UsuarioRepository;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
-
-import java.util.Date;
-import java.util.Map;
-import java.util.UUID;
 import org.springframework.stereotype.Service;
 
+import java.util.*;
+
 @Service
-public class UsuarioService <T extends Usuario> {
+public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
-    @Autowired
-    private TenantService tenantService;
 
-    public Page<Usuario> getAll (Pageable pageable){
-        return usuarioRepository.findAll(pageable);
+    public List<Usuario> getAll() {
+        return usuarioRepository.findAll();
     }
+
     public Usuario findByAuthId(String authId) {
         return usuarioRepository.findByAuthId(UUID.fromString(authId));
     }
@@ -34,37 +29,34 @@ public class UsuarioService <T extends Usuario> {
     public Usuario save(Usuario usuario) {
         return usuarioRepository.save(usuario);
     }
-    public T createUser(Map<String, Object> userData, Class<T> userType) throws InstantiationException, IllegalAccessException {
-        // Verificar si el tenant existe
-        Tenant tenant = tenantService.getById((Long) userData.get("tenantId"));
-        if (tenant == null) {
-            throw new ResourceNotFoundException("Tenant not found");
+
+    // Método para crear el usuario adecuado basado en el JWT y el rol
+
+    // Función genérica para crear usuarios
+
+    public Usuario updateUserFromSupabase(DecodedJWT jwt) {
+        Usuario usuario = usuarioRepository.findByAuthId(UUID.fromString(jwt.getSubject()));
+        if (usuario != null) {
+            // Actualizar campos que puedan haber cambiado en Supabase
+            usuario.setEmail(jwt.getClaim("email").asString());
+            usuario.setName(jwt.getClaim("name").asString());
+            // Actualizar otros campos según sea necesario
+            return usuarioRepository.save(usuario);
         }
-
-        // Validar datos comunes
-        UserUtils.validateUserData(userData);
-
-        // Crear la instancia del tipo de usuario específico
-        T user = userType.newInstance();
-
-        // Setear los datos comunes
-        user.setName((String) userData.get("name"));
-        user.setLastName((String) userData.get("lastName"));
-        user.setDateOfBirth((Date) userData.get("dateOfBirth"));
-        user.setEmail((String) userData.get("email"));
-        user.setPhone((String) userData.get("phone"));
-        user.setUsername((String) userData.get("username"));
-        user.setCuil((String) userData.get("cuil"));
-        user.setAddress((String) userData.get("address"));
-        if (user.getProfilePictureURL() != null) {
-            user.setProfilePictureURL((String) userData.get("profilePictureURL"));
+        return null;
+    }
+    public List<UsuarioDTOMini> getAllUsersMini () {
+        List<Usuario> usuarios = usuarioRepository.findAll();
+        List<UsuarioDTOMini> usuarioDTOMinis = new ArrayList<>();
+        for (int i = 0; i < usuarios.size(); i++) {
+            Usuario usuario = usuarios.get(i);
+            UsuarioDTOMini usuarioDTOMini = new UsuarioDTOMini();
+            usuarioDTOMini.setUuid(usuario.getAuthId());
+            usuarioDTOMini.setName(usuario.getName());
+            usuarioDTOMini.setRole(usuario.getRol());
+            usuarioDTOMini.setActive(usuario.isActive());
+            usuarios.set(i, usuario);
         }
-        if (user.getEmergencyPhone() != null) {
-            user.setEmergencyPhone((String) userData.get("emergencyPhone"));
-        }
-        user.setTenant(tenant);
-
-        // Guardar el usuario
-        return usuarioRepository.save(user);
+        return usuarioDTOMinis;
     }
 }
