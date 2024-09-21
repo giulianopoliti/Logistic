@@ -16,13 +16,13 @@ import java.util.Date;
 @Table(name = "usuarios")
 public class Admin extends Usuario {
 
-    public Admin(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String phone, String emergencyPhone, String username, String cuil, String address, Date createdAt, String profilePictureURL) {
-        super(name, lastName, dateOfBirth, tenant, email, phone, emergencyPhone, username, cuil, address, createdAt, profilePictureURL);
-        this.setRol(Role.ADMIN);
+    public Admin(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String phone, String emergencyPhone, String username, String cuil, String address, String profilePictureURL) {
+        super(name, lastName, dateOfBirth, tenant, email, phone, emergencyPhone, username, cuil, address, profilePictureURL);
+
     }
 
     public Admin() {
-        this.setRol(Role.ADMIN);
+        super();
     }
     @Transient
     @Override

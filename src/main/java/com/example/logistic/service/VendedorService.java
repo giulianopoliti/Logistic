@@ -12,6 +12,7 @@ import com.example.logistic.repository.VendedorRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -54,10 +55,21 @@ public class VendedorService extends UsuarioService {
         pedido.setVendedor(vendedor);
         return pedidoRepository.save(pedido);
     }
-    public VendedorDTO createVendedor(Map<String, Object> vendedorData) throws InstantiationException, IllegalAccessException {
+    @PostMapping("/registro")
+    public VendedorDTO createVendedor(Map<String, Object> vendedorData) throws InstantiationException, IllegalAccessException, ParseException {
         Vendedor vendedor = new Vendedor();
-        // implementar logica para guardar la data
-        return vendedorMapper.toDTO(save(vendedor));
+        vendedor.setAuthId(UUID.fromString((String) vendedorData.get("authId")));
+        vendedor.setName((String) vendedorData.get("name"));
+        vendedor.setLastName((String) vendedorData.get("lastName"));
+        vendedor.setAddress((String) vendedorData.get("address"));
+        vendedor.setEmail((String) vendedorData.get("email"));
+        vendedor.setCuil((String) vendedorData.get("cuil"));
+        Tenant tenant = tenantService.getByUuid(UUID.fromString((String) vendedorData.get("tenantId")));
+        vendedor.setTenant(tenant);
+        String dateStr = (String) vendedorData.get("dateOfBirth");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date dateOfBirth = dateFormat.parse(dateStr);
+        vendedor.setDateOfBirth(dateOfBirth);        return vendedorMapper.toDTO(save(vendedor));
     }
     public List<VendedorDTO> getAllVendedores() {
         List<Vendedor> vendedores = vendedorRepository.findAll();

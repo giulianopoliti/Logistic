@@ -4,8 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
-import com.example.logistic.model.roles.Role;
-import com.example.logistic.model.roles.Usuario;
+import com.example.logistic.model.roles.*;
 import com.example.logistic.service.UsuarioService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -53,18 +52,23 @@ public class SupabaseAuthFilter extends OncePerRequestFilter {
                 if (usuario == null) {
                     throw new RuntimeException("Usuario no encontrado");
                 }
-                // Si el rol no está en el JWT, lo traemos de la base de datos
-                if (usuario.getRol() == null) {
-                    throw new RuntimeException("Rol no encontrado");
-                }
+
 
 
                 List<GrantedAuthority> authorities = new ArrayList<>();
-                authorities.add(new SimpleGrantedAuthority("ROLE_" + usuario.getRol().name()));
 
                 // Agrega ROLE_SUPERADMIN si es necesario
-                if (usuario.getRol() == Role.SUPERADMIN) {
+                if (usuario instanceof Admin) {
                     authorities.add(new SimpleGrantedAuthority("ROLE_SUPERADMIN"));
+                }
+                if (usuario instanceof Driver) {
+                    authorities.add(new SimpleGrantedAuthority("ROLE_DRIVER"));
+                }
+                if (usuario instanceof OperadorDeposito) {
+                    authorities.add(new SimpleGrantedAuthority("ROLE_OPERADOR_DEPOSITO"));
+                }
+                if (usuario instanceof Vendedor) {
+                    authorities.add(new SimpleGrantedAuthority("ROLE_VENDEDOR"));
                 }
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

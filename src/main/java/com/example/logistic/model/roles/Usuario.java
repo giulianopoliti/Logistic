@@ -18,7 +18,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "usuarios")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "tipo_usuario", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
 public abstract class Usuario {
 
     @Id
@@ -69,12 +69,10 @@ public abstract class Usuario {
     @JoinColumn(name = "auth_id")
     private Configuration configuration;
 
-    @Enumerated(EnumType.STRING)
-    private Role rol;
 
 
     public Usuario(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String phone, String emergencyPhone,
-                   String username, String cuil, String address, Date createdAt, String profilePictureURL) {
+                   String username, String cuil, String address, String profilePictureURL) {
         this.name = name;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
@@ -87,6 +85,7 @@ public abstract class Usuario {
         this.cuil = cuil;
         this.address = address;
         this.profilePictureURL = profilePictureURL;
+        this.createdAt = new Date();
     }
 
     public Usuario() {

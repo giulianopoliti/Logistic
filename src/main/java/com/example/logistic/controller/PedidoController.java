@@ -75,13 +75,13 @@ public class PedidoController {
 
     // El driver puede marcar cuando no llega a entregar un paquete
     @PreAuthorize("hasAnyRole('ROLE_VENDEDOR', 'ADMIN')")
-    public ResponseEntity<Page<PedidoDTO>> getPaquetesVendedor (@RequestBody VendedorDTO vendedorDTO,
+    public ResponseEntity<Page<PedidoDTO>> getPaquetesVendedor (@RequestBody UUID vendedorUuid,
                                                                @RequestParam int page,
                                                                @RequestParam int size) {
-        Page<PedidoDTO> pedidoDTOS = pedidoService.findPedidosByVendedor(vendedorDTO, PageRequest.of(page, size));
+        Page<PedidoDTO> pedidoDTOS = pedidoService.findPedidosByVendedor(vendedorUuid, PageRequest.of(page, size));
         return ResponseEntity.ok(pedidoDTOS);
     }
-    public ResponseEntity<List<PedidoDTO>> getPaquetesByDriver (@RequestBody DriverDTO driverDTO,
+    public ResponseEntity<List<PedidoDTO>> getPedidosByDriver (@RequestBody DriverDTO driverDTO,
                                                                 @RequestParam int page,
                                                                 @RequestParam int size) {
         if (driverDTO == null) {
@@ -112,6 +112,7 @@ public class PedidoController {
         // ver si crear viaje aca o no
         return ResponseEntity.ok(pedidoMapper.toDTO(pedido));
     }
+    @GetMapping("/all")
     public ResponseEntity<Page<PedidoDTO>> getPedidosByDate (@RequestParam String date,
                                                              @RequestParam(defaultValue = "0") int page,
                                                             @RequestParam(defaultValue = "30") int size) {

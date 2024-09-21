@@ -1,7 +1,6 @@
 package com.example.logistic.model.dtos;
 
-import com.example.logistic.model.roles.Role;
-import jakarta.persistence.GeneratedValue;
+
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,7 +33,6 @@ public abstract class UsuarioDTO {
     private UUID tenantUuid;
 
     private boolean isActive;
-    private Role rol;
 
     @NotBlank(message = "El email no puede estar vacío")
     @Email(message = "El email debe ser válido")

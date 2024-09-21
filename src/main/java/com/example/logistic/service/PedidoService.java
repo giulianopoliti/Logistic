@@ -121,8 +121,8 @@ public class PedidoService {
         pedido.setEstadoPedido(EstadoPedido.ENTREGADO);
         return pedidoMapper.toDTO(save(pedido));
     }
-    public Page<PedidoDTO> findPedidosByVendedor(VendedorDTO vendedorDTO, Pageable pageable) {
-        Vendedor vendedor = vendedorService.findById(vendedorDTO.getUuid());
+    public Page<PedidoDTO> findPedidosByVendedor(UUID vendedorUuid, Pageable pageable) {
+        Vendedor vendedor = vendedorService.findById(vendedorUuid);
 
         // Usar la paginación en la consulta
         Page<Pedido> pedidosPage = pedidoRepository.findPedidosByVendedorId(vendedor.getAuthId(), pageable);

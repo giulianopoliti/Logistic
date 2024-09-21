@@ -1,9 +1,9 @@
 package com.example.logistic.service;
 
 import com.example.logistic.errors.ResourceNotFoundException;
+import com.example.logistic.model.dtos.UsuarioDTO;
 import com.example.logistic.model.dtos.UsuarioDTOMini;
-import com.example.logistic.model.roles.Tenant;
-import com.example.logistic.model.roles.Usuario;
+import com.example.logistic.model.roles.*;
 import com.example.logistic.repository.UsuarioRepository;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,10 +53,68 @@ public class UsuarioService {
             UsuarioDTOMini usuarioDTOMini = new UsuarioDTOMini();
             usuarioDTOMini.setUuid(usuario.getAuthId());
             usuarioDTOMini.setName(usuario.getName());
-            usuarioDTOMini.setRole(usuario.getRol());
+            usuarioDTOMini.setRole(usuario.getClass().toString());
             usuarioDTOMini.setActive(usuario.isActive());
-            usuarios.set(i, usuario);
+            usuarioDTOMinis.add(usuarioDTOMini);
         }
         return usuarioDTOMinis;
     }
+
+    public UsuarioDTO createUsuario (Map<String, Object> dataUser) {
+        if (dataUser.isEmpty()) {
+            throw new RuntimeException("No se han enviado datos");
+        }
+        String role = (String) dataUser.get("role");
+        role.toLowerCase();
+        Usuario usuario;
+        switch (role) {
+            case "vendedor":
+                usuario = new Vendedor();
+            break;
+            case "driver":
+                usuario = new Driver();
+                break;
+            case "operadordeposito":
+                usuario = new OperadorDeposito();
+                break;
+            case "admin":
+                usuario: new Admin();
+                break;
+            default:
+                throw new IllegalArgumentException("Rol no válido: " + role);
+        }
+        UsuarioDTO usuarioDTO = setCommonFields(dataUser, usuario);
+
+    }
+    public UsuarioDTO setCommonFields (Map<String, Object> dataUser, Usuario usuario) {
+        usuario.setAuthId(UUID.fromString((String) dataUser.get("authId")));
+        usuario.setName((String) dataUser.get("name"));
+        usuario.setLastName((String) dataUser.get("lastName"));
+        usuario.setAddress((String) dataUser.get("address"));
+        usuario.setEmail((String) dataUser.get("email"));
+        usuario.setCuil((String) dataUser.get("cuil"));
+        usuario.setPhone((String) dataUser.get("phone"));
+        usuario.setEmergencyPhone((String) dataUser.get("emergencyPhone"));
+        usuario.setUsername((String) dataUser.get("username"));
+        usuario.setProfilePictureURL((String) dataUser.get("profilePictureURL"));
+    }
+
+    /*
+        @PostMapping("/registro")
+    public VendedorDTO createVendedor(Map<String, Object> vendedorData) throws InstantiationException, IllegalAccessException, ParseException {
+        Vendedor vendedor = new Vendedor();
+        vendedor.setAuthId(UUID.fromString((String) vendedorData.get("authId")));
+        vendedor.setName((String) vendedorData.get("name"));
+        vendedor.setLastName((String) vendedorData.get("lastName"));
+        vendedor.setAddress((String) vendedorData.get("address"));
+        vendedor.setEmail((String) vendedorData.get("email"));
+        vendedor.setCuil((String) vendedorData.get("cuil"));
+        Tenant tenant = tenantService.getByUuid(UUID.fromString((String) vendedorData.get("tenantId")));
+        vendedor.setTenant(tenant);
+        String dateStr = (String) vendedorData.get("dateOfBirth");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date dateOfBirth = dateFormat.parse(dateStr);
+        vendedor.setDateOfBirth(dateOfBirth);        return vendedorMapper.toDTO(save(vendedor));
+    }
+     */
 }

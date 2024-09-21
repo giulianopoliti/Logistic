@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Time;
+import java.util.Date;
 import java.util.UUID;
 
 @Getter
@@ -19,4 +21,7 @@ public class Local {
     private Vendedor vendedor;
     @Embedded
     private Ubicacion ubicacion;
+
+    private Time horarioApertura;
+    private Time horarioCierre;
 }

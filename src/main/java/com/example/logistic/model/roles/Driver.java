@@ -35,7 +35,7 @@ public class Driver extends Usuario {
 
 
     public Driver(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String phone, String emergencyPhone, String username, String cuil, String address, Date createdAt, String profilePictureURL, Vehiculo vehiculo, IntegracionMeliDriver integracionMeliDriver, EstadoDriver estadoDriver) {
-        super(name, lastName, dateOfBirth, tenant, email, phone, emergencyPhone, username, cuil, address, createdAt, profilePictureURL);
+        super(name, lastName, dateOfBirth, tenant, email, phone, emergencyPhone, username, cuil, address, profilePictureURL);
         this.vehiculo = vehiculo;
         this.rutas = new ArrayList<>();
         this.pedidos = new ArrayList<>();
@@ -45,7 +45,6 @@ public class Driver extends Usuario {
 
     public Driver() {
         super();
-        this.setRol(Role.DRIVER);
     }
     public void modificarVehiculo (Vehiculo vehiculo) {
         this.vehiculo = vehiculo;

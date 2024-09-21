@@ -19,9 +19,9 @@ public class Tenant {
     @GeneratedValue(generator = "UUID")
     private UUID uuid;
 
-    private String nombre;
+    private String name;
     private String razonSocial;  // Agregado para nombre legal completo
-    private boolean activo;
+    private boolean active;
     private String domain;
 
     @Email(message = "Email debe ser válido")

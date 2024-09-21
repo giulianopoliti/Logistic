@@ -29,17 +29,15 @@ public class Vendedor extends Usuario {
     @JoinColumn(name = "vendedor_id")
     private List<IntegracionMeliVendedor> integracionMeliVendedor;
 
-    public Vendedor(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String phone, String emergencyPhone, String username, String cuil, String address, Date createdAt, String profilePictureURL) {
-        super(name, lastName, dateOfBirth, tenant, email, phone, emergencyPhone, username, cuil, address, createdAt, profilePictureURL);
+    public Vendedor(String name, String lastName, Date dateOfBirth, Tenant tenant, String email, String phone, String emergencyPhone, String username, String cuil, String address, String profilePictureURL) {
+        super(name, lastName, dateOfBirth, tenant, email, phone, emergencyPhone, username, cuil, address, profilePictureURL);
         this.pedidos = new ArrayList<>();
         this.locales = new ArrayList<>();
         this.integracionMeliVendedor = new ArrayList<>();
-        this.setRol(Role.VENDEDOR);
     }
 
     public Vendedor() {
         super();
-        this.setRol(Role.VENDEDOR);
     }
 
 
