@@ -1,6 +1,7 @@
 package com.example.logistic.service;
 
 import com.example.logistic.errors.ResourceNotFoundException;
+import com.example.logistic.mapper.UsuarioMapper;
 import com.example.logistic.model.dtos.UsuarioDTO;
 import com.example.logistic.model.dtos.UsuarioDTOMini;
 import com.example.logistic.model.roles.*;
@@ -17,6 +18,8 @@ import java.util.*;
 public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private UsuarioMapper usuarioMapper;
 
     public List<Usuario> getAll() {
         return usuarioRepository.findAll();
@@ -60,17 +63,23 @@ public class UsuarioService {
         return usuarioDTOMinis;
     }
 
-    public UsuarioDTO createUsuario (Map<String, Object> dataUser) {
+    public UsuarioDTO createUsuario(Map<String, Object> dataUser) {
         if (dataUser.isEmpty()) {
             throw new RuntimeException("No se han enviado datos");
         }
-        String role = (String) dataUser.get("role");
-        role.toLowerCase();
+
+        Object roleObj = dataUser.get("role");
+        if (roleObj == null) {
+            throw new RuntimeException("El campo 'role' es obligatorio");
+        }
+
+        String role = ((String) roleObj).toLowerCase();
         Usuario usuario;
+
         switch (role) {
             case "vendedor":
                 usuario = new Vendedor();
-            break;
+                break;
             case "driver":
                 usuario = new Driver();
                 break;
@@ -78,13 +87,14 @@ public class UsuarioService {
                 usuario = new OperadorDeposito();
                 break;
             case "admin":
-                usuario: new Admin();
+                usuario = new Admin();
                 break;
             default:
                 throw new IllegalArgumentException("Rol no válido: " + role);
         }
-        UsuarioDTO usuarioDTO = setCommonFields(dataUser, usuario);
 
+        UsuarioDTO usuarioDTO = setCommonFields(dataUser, usuario);
+        return usuarioDTO;
     }
     public UsuarioDTO setCommonFields (Map<String, Object> dataUser, Usuario usuario) {
         usuario.setAuthId(UUID.fromString((String) dataUser.get("authId")));
@@ -97,6 +107,8 @@ public class UsuarioService {
         usuario.setEmergencyPhone((String) dataUser.get("emergencyPhone"));
         usuario.setUsername((String) dataUser.get("username"));
         usuario.setProfilePictureURL((String) dataUser.get("profilePictureURL"));
+        UsuarioDTO usuarioDTO = usuarioMapper.toDTO(usuario, usuario.getClass().toString());
+        return usuarioDTO;
     }
 
     /*

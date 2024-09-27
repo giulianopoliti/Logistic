@@ -31,7 +31,6 @@ public class UsuarioMapper {
                         return adminDTO;
                         default:
                             return null;
+        }
     }
-    return null;
-}
 }
